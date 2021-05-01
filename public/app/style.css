@@ -1,0 +1,42 @@
+a {
+    text-decoration: none;
+}
+
+.page-break {
+    border: 1px solid rgb(197, 184, 184);
+}
+
+figure {
+    display: block;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+}
+
+table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    border: 1px solid #ddd;
+    padding: 0 10px 0 10px;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #ee008b26;
+}
+
+th {
+    margin-left: auto;
+    text-align: left;
+    background-color: #fa8f0444;
+    /* color: white; */
+}

@@ -1,0 +1,358 @@
+<%- include('partials/header.ejs') %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/css/bootstrap-select.css" />
+
+<style>
+    button.btn.dropdown-toggle.btn-light {
+        border: 1px solid black;
+    }
+
+    .bootstrap-select .dropdown-toggle:focus {
+        outline: none !important;
+        outline: none !important;
+    }
+
+    a.dropdown-item.disabled.selected.active span {
+        color: black;
+    }
+
+    a.dropdown-item.disabled.selected.active span:hover {
+        color: #fff;
+    }
+
+    .dropdown-item span {
+        color: black;
+    }
+
+    li.selected.active {
+        width: 100%;
+    }
+
+    a.dropdown-item.selected.active {
+        width: 100%;
+    }
+
+    a.dropdown-item.selected.active span {
+        color: #fff;
+    }
+
+    .dropdown-item.selected.active:hover {
+        background-color: #007bff;
+    }
+
+    li.active {
+        width: 100%;
+    }
+
+    .dropdown-item.active {
+        width: 100%;
+    }
+
+    a.dropdown-item.active span {
+        color: #fff;
+    }
+
+    .dropdown-item.active:hover {
+        background-color: #007bff;
+    }
+
+    .dropdown-menu.show {
+        background: #fff;
+    }
+
+    a.dropdown-item {
+        width: 100%;
+    }
+
+    a.dropdown-item:hover {
+        background: rgb(212, 208, 208);
+    }
+</style>
+
+<!-- content start -->
+<div class="main">
+    <div class="d-flex head">
+        <h2 class="heading">Plans :-</h2>
+        <button type="button" class="btn btn-info ml-auto" data-toggle="modal" data-target="#addnewPlan">Add
+            New</button>
+    </div>
+    <div class="content">
+        <table id="example" class="table table-striped table-bordered add-button" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="text-center">User</th>
+                    <th class="text-center">Months</th>
+                    <th class="text-center">Amount</th>
+                    <th class="text-center">Videos</th>
+                    <th class="text-center">Notes</th>
+                    <th class="text-center">Active Date</th>
+                    <th class="text-center">Edit</th>
+                    <th class="text-center">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(!plans[0]) { %>
+                <tr>
+                    <td colspan="100%" class="text-center">No Plans</td>
+                </tr>
+                <% } else {%>
+                <% plans.forEach(function(plan){ %>
+                <tr>
+                    <td class="text-center"><%= plan.phone %></td>
+                    <td class="text-center"><%= plan.months %></td>
+                    <td class="text-center"><%= plan.amount %></td>
+                    <td class="text-center">
+                        <%- plan.videos ? '<i class="material-icons bg-success text-white">done</i>' : '<i class="material-icons bg-danger text-white">close</i>' %>
+                    </td>
+                    <td class="text-center">
+                        <%- plan.notes ? '<i class="material-icons bg-success text-white">done</i>' : '<i class="material-icons bg-danger text-white">close</i>' %>
+                    </td>
+                    <td class="text-center"><%= plan.active_date %></td>
+                    <td class=" text-center" style="width: 12px;"><i class="material-icons table-icon btn text-primary"
+                            data-toggle="modal" data-target="#editPlan"
+                            onclick="editformupdate('<%= plan._id %>', '<%= plan.user %>', '<%= plan.months %>', '<%= plan.amount %>', '<%- plan.videos %>', '<%- plan.notes %>');">edit</i>
+                    </td>
+                    <td class=" text-center" style="width: 12px;"><i class="material-icons table-icon btn delete-icon"
+                            onclick="deleteplan('<%= plan._id %>');">delete</i>
+                    </td>
+                </tr>
+                <% }); %> <% } %>
+            </tbody>
+        </table>
+    </div>
+    <div>
+
+        <!-- Add User Modal -->
+        <div class="modal fade" id="addnewPlan">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add New Plan</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form id="addnewplan" class="mx-5">
+                            <div class="mb-3">
+                                <select id="user" name="user" class="selectpicker w-100 form-control"
+                                    data-show-subtext="true" data-live-search="true">
+                                    <% users.forEach(function(user){ %>
+                                        <option value="<%= user._id %>"><%= user.phone %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="months" name="months" placeholder="Months">
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="amount" name="amount"
+                                    placeholder="Amount (RS.)">
+                            </div>
+                            <div class="mb-3" style="display: flex;">
+                                <div style="display: flex;">
+                                    <input type="checkbox" class="form-control" id="videos" name="videos" checked>
+                                    <label style="margin-left: 10px; margin-top: 9px;">Videos</label>
+                                </div>
+                                <div style="display: flex; margin-left: 20px;">
+                                    <input type="checkbox" class="form-control" id="notes" name="notes" checked>
+                                    <label style="margin-left: 10px; margin-top: 9px;">Notes</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info mt-3 pull-right">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit User Modal -->
+        <div class="modal fade" id="editPlan">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit Plan</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form id="editplan" class="mx-5">
+                            <input type="hidden" id="editid" name="editid">
+                            <div class="mb-3">
+                                <select id="edituser" name="edituser" class="selectpicker w-100 form-control"
+                                    data-show-subtext="true" data-live-search="true">
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="editmonths" name="editmonths"
+                                    placeholder="Months">
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="editamount" name="editamount"
+                                    placeholder="Amount (RS.)">
+                            </div>
+                            <div class="mb-3" style="display: flex;">
+                                <div style="display: flex;">
+                                    <input type="checkbox" class="form-control" id="editvideos" name="editvideos">
+                                    <label style="margin-left: 10px; margin-top: 9px;">Videos</label>
+                                </div>
+                                <div style="display: flex; margin-left: 20px;">
+                                    <input type="checkbox" class="form-control" id="editnotes" name="editnotes">
+                                    <label style="margin-left: 10px; margin-top: 9px;">Notes</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info mt-3 pull-right">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include ('partials/footer.ejs') %>
+
+        <script>
+            activeSideBar('plans');
+
+            var addplanform = $('#addnewplan');
+            var editplanform = $('#editplan');
+
+            addplanform.on('submit', addplansubmitHandler);
+            editplanform.on('submit', editplansubmitHandler);
+
+            function addplansubmitHandler(e) {
+                e.preventDefault()
+
+                // vaidation
+                if ($('#user').val() == null) {
+                    alert('Please select a user');
+                    return false;
+                } else if (!isNumeric($('#months').val())) {
+                    alert('Please enter valid months');
+                    return false;
+                } else if (!isNumeric($('#amount').val())) {
+                    alert('Please enter valid amount');
+                    return false;
+                }
+
+                // DO POST
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: window.location + "/addnewplan",
+                    data: JSON.stringify({
+                        user: $('#user').val(),
+                        months: $('#months').val(),
+                        amount: $('#amount').val(),
+                        videos: $('#videos').is(':checked'),
+                        notes: $('#notes').is(':checked')
+                    })
+                }).done(res => {
+                    if (res == 'success') {
+                        location.reload();
+                    } else {
+                        alert(res);
+                    }
+                });
+            }
+
+            function editplansubmitHandler(e) {
+                e.preventDefault()
+
+                // vaidation
+                if ($('#edituser').val() == null) {
+                    alert('Please select a user');
+                    return false;
+                } else if (!isNumeric($('#editmonths').val())) {
+                    alert('Please enter valid months');
+                    return false;
+                } else if (!isNumeric($('#editamount').val())) {
+                    alert('Please enter valid amount');
+                    return false;
+                }
+
+                // DO POST
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: window.location + "/editplan",
+                    data: JSON.stringify({
+                        id: $('#editid').val(),
+                        user: $('#edituser').val(),
+                        months: $('#editmonths').val(),
+                        amount: $('#editamount').val(),
+                        videos: $('#editvideos').is(':checked'),
+                        notes: $('#editnotes').is(':checked')
+                    })
+                }).done(res => {
+                    if (res == 'success') {
+                        location.reload();
+                    } else {
+                        alert(res);
+                    }
+                });
+            }
+
+            async function editformupdate(id, user, months, amount, videos, notes) {
+                $('#editid').val(id);
+                $('#edituser').append($("<option></option>")
+                    .attr("value", user)
+                    .text(await getNumber(user)));
+                $('.selectpicker').selectpicker('refresh');
+                $('#editmonths').val(months);
+                $('#editamount').val(amount);
+                videos == 'true' ? $('#editvideos').attr('checked', true) : $('#editvideos').attr('checked', false);
+                notes == 'true' ? $('#editnotes').attr('checked', true) : $('#editnotes').attr('checked', false);
+            }
+
+            function deleteplan(id) {
+                if (confirm('Do you really want to delete this plan')) {
+                    // DO POST
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json",
+                        url: window.location + "/deleteplan",
+                        data: JSON.stringify({
+                            id: id
+                        })
+                    }).done(res => {
+                        if (res == 'success') {
+                            location.reload();
+                        } else {
+                            alert(res);
+                        }
+                    });
+                }
+            }
+
+            function getNumber(id) {
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json",
+                        url: window.location + "/getnumber",
+                        data: JSON.stringify({
+                            id: id
+                        })
+                    }).done(res => {
+                        resolve(res);
+                    });
+                })
+            }
+
+            async function phone(id) {
+                const phone = await getNumber();
+                alert(phone)
+            }
+
+            function isNumeric(str) {
+                if (typeof str != "string") return false // we only process strings!  
+                return !isNaN(str) &&
+                    // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+                    !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+            }
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.3/js/bootstrap-select.js"></script>

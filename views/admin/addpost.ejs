@@ -1,0 +1,83 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main">
+    <div class="d-flex head">
+        <h2 class="heading">Add Blog :-</h2>
+    </div>
+    <div class="content">
+        <form method="post" enctype="multipart/form-data" id="updateIDForm">
+            <div class=" row">
+                <div class="col-12 col-lg-12">
+                    <div class="mb-3">
+                        <label>Text</label>
+                        <textarea name="text" class="form-control" id="text" rows="5"></textarea>
+                        <small class="form-text"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label>Image</label>
+                        <input type="file" name="image" id="image" class="form-control" onchange="readURL(this);"
+                            accept="image/x-png,image/jpg,image/jpeg">
+                        <small class=" form-text"></small>
+                    </div>
+                    <center>
+                        <img height="200px" src="">
+                    </center>
+                    <button type="submit" class="btn btn-info mt-3 pull-right">Save</button>
+                </div>
+            </div>
+    </div>
+    </form>
+</div>
+<div>
+
+    <%- include ('partials/footer.ejs') %>
+
+    <script>
+        activeSideBar('posts');
+        $("#home_expand").text('expand_less');
+        $('#home_submenu').show();
+
+        // set new selected image
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('img').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        var form = $('#updateIDForm');
+
+        form.on('submit', submitHandler)
+
+        function submitHandler(e) {
+            e.preventDefault()
+
+            // PREPARE FORM DATA
+            var file = $("#image")[0].files[0];
+
+            var formData = new FormData();
+            formData.append("text", $('#text').val());
+            formData.append("image", file);
+
+            // DO POST
+            $.ajax({
+                type: "POST",
+                enctype: "multipart/form-data",
+                processData: false,
+                contentType: false,
+                url: window.location + "/postSubmit",
+                data: formData
+            }).done(res => {
+                alert(res);
+                if (res == 'Post saved successfully') {
+                    window.location.href = 'posts'
+                }
+            });
+        }
+    </script>

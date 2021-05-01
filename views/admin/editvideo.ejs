@@ -1,0 +1,76 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main">
+    <div class="d-flex head">
+        <h2 class="heading">Edit Video :-</h2>
+    </div>
+    <div class="content">
+        <form method="post" id="form">
+            <div class=" row">
+                <div class="col-12 col-lg-12">
+                    <div class="mb-3">
+                        <label>Text</label>
+                        <textarea name="text" class="form-control" id="text" rows="5"><%= video.text %> </textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label>ID</label>
+                        <input type="text" class="form-control" name="id" id="id" value="<%= video.id %>">
+                    </div>
+                    <center>
+                        <img height="200px" src="https://img.youtube.com/vi/<%= video.id %>/mqdefault.jpg"
+                            alt="<%= video.id %> ">
+                    </center>
+                    <button type="submit" class="btn btn-info mt-3 pull-right">Save</button>
+                </div>
+            </div>
+    </div>
+    </form>
+</div>
+<div>
+
+    <%- include ('partials/footer.ejs') %>
+
+    <script>
+        activeSideBar('posts');
+        $("#home_expand").text('expand_less');
+        $('#home_submenu').show();
+
+        // set image
+        $('#id').keyup(() => {
+            if ($('#id').val() == '') {
+                var id = "<%= video.id %>";
+                $('img').attr('src', `https://img.youtube.com/vi/${id}/mqdefault.jpg`);
+            } else {
+                $('img').attr('src', `https://img.youtube.com/vi/${$('#id').val()}/mqdefault.jpg`);
+            }
+        });
+
+        var form = $('#form');
+
+        form.on('submit', submitHandler)
+
+        function submitHandler(e) {
+            e.preventDefault()
+
+            // set form data
+            var formData = {
+                "text": $('#text').val(),
+                "id": $('#id').val(),
+                "_id": "<%= video._id %>"
+            };
+
+            // DO POST
+            $.ajax({
+                type: "POST",
+                contentType: 'application/json',
+                url: "editvideo/videoSubmit",
+                data: JSON.stringify(formData)
+            }).done(res => {
+                alert(res);
+                if (res == 'Video updated successfully') {
+                    window.location.href = 'videos'
+                }
+            });
+        }
+    </script>

@@ -1,0 +1,121 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main">
+    <div class="d-flex head">
+        <h2 class="heading">Sliders :-</h2>
+        <button type="button" class="btn btn-info ml-auto" data-toggle="modal" data-target="#addnewSlider">Add
+            New</button>
+    </div>
+    <div class="content">
+        <table id="example" class="table table-striped table-bordered add-button" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="text-center">Slider</th>
+                    <th class="text-center">Created at</th>
+                    <th class="text-center">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(!sliders[0]) { %>
+                <tr>
+                    <td colspan="100%" class="text-center">No Sliders</td>
+                </tr>
+                <% } else {%>
+                <% sliders.forEach(function(slider){ %>
+                <tr>
+                    <td class="text-center"><img src="/dist/sliders/<%= slider.basename %>" alt="slider" height="50px" width="50px"></td>
+                    <td class="text-center"><%= slider.created_at %></td>
+                    <td class=" text-center" style="width: 12px;"><i class="material-icons table-icon btn delete-icon"
+                            onclick="deleteslider('<%= slider._id %>');">delete</i>
+                    </td>
+                </tr>
+                <% }); %>
+                <% } %>
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+    </div>
+    <div>
+
+        <!-- Add User Modal -->
+        <div class="modal fade" id="addnewSlider">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add New Slider</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form id="addnewslider" class="mx-5">
+                            <div class="mb-3">
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            </div>
+                            <button type="submit" class="btn btn-info mt-3 pull-right">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include ('partials/footer.ejs') %>
+
+        <script>
+            activeSideBar('sliders');
+
+            $(document).ready(function () {
+                $('#example').DataTable();
+            });
+
+            var addsliderform = $('#addnewslider');
+
+            addsliderform.on('submit', addslidersubmitHandler);
+
+            function addslidersubmitHandler(e) {
+                e.preventDefault()
+
+                // PREPARE FORM DATA
+                var formData = new FormData(addsliderform[0]);
+
+                // DO POST
+                $.ajax({
+                    type: "POST",
+                    enctype: "multipart/form-data",
+                    processData: false,
+                    contentType: false,
+                    url: window.location + "/addnewslider",
+                    data: formData
+                }).done(res => {
+                    if (res == 'success') {
+                        location.reload();
+                    } else {
+                        alert(res);
+                    }
+                });
+            }
+
+            function deleteslider(id) {
+                if (confirm('Do you really want to delete this slider')) {
+                    // DO POST
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json",
+                        url: window.location + "/deleteslider",
+                        data: JSON.stringify({
+                            id: id
+                        })
+                    }).done(res => {
+                        if (res == 'success') {
+                            location.reload();
+                        } else {
+                            alert(res);
+                        }
+                    });
+                }
+            }
+        </script>

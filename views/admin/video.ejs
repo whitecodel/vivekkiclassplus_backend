@@ -1,0 +1,166 @@
+<%- include('partials/header.ejs') %>
+
+<style>
+    .img-thumbnail {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+
+<!-- content start -->
+<div class="main">
+    <div class="d-flex head">
+        <h2 class="heading">Videos</h2>
+    </div>
+    <div class="content">
+        <form id="form">
+            <label>Video Title :</label>
+            <input type="text" name="title" id="title" class="form-control mb-3" placeholder="Video Title">
+            <label>Video :</label>
+            <div style="display: flex;">
+                <input type="file" id="video" name="video" class="form-control mb-3" style="width: 80%;">
+                <button class="btn btn-info ml-auto">upload</button>
+            </div>
+            <label>Thumbnail :</label>
+            <input type="file" id="thumbnail" name="thumbnail" class="form-control" style="width: 80%;" height="20px">
+        </form>
+        <div class="progress mt-3" style="display: none;">
+            <div class="bar text-center text-white"></div>
+        </div>
+        <div class="progress_type text-center mt-2 text-center" style="display: none;"></div>
+        <hr>
+        <center>
+            <img class="mt-3" height="200px" width="200px" src="" style="display: none;">
+        </center>
+    </div>
+</div>
+</form>
+
+<%- include ('partials/footer.ejs') %>
+
+<script>
+    activeSideBar('video-categories');
+    $("#home_expand").text('expand_less');
+    $('#home_submenu').show();
+    var bar = $('.bar');
+    var progress_type = $('.progress_type');
+
+    var form = $('#form');
+
+    form.on('submit', submitHandler)
+
+    function submitHandler(e) {
+        e.preventDefault()
+        var title = $('#title').val();
+
+        // validation 
+        if (title == '') {
+            alert('Please enter title');
+            return false;
+        } else if (title.length > 50) {
+            alert('Title max lenth is 50 charactor');
+            return false;
+        }
+
+        // PREPARE FORM DATA
+        var formData = new FormData(form[0]);
+        formData.append('category', getUrlParameter('id'));
+
+        // DO POST
+        $.ajax({
+            type: "POST",
+            cache: false,
+            enctype: "multipart/form-data",
+            processData: false,
+            contentType: false,
+            url: "videos/addvideo",
+            data: formData,
+            beforeSend: () => {
+                $('.progress').show();
+                progress_type.show();
+                progress_type.text('uploading...');
+                var percentVal = '0%';
+                bar.width(percentVal);
+                bar.text(percentVal);
+            },
+            xhr: function () {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentVal = parseInt(((evt.loaded / evt.total) * 100).toString()) +
+                            '%';
+                        bar.width(percentVal);
+                        bar.text(percentVal);
+                        if (parseInt(percentVal.replace('%', '')) == 100) {
+                            progress_type.text('converting...');
+                            bar.width('0%');
+                            bar.text('0%');
+                            convertPercent();
+                        }
+                    }
+                }, false);
+                return xhr;
+            },
+
+            complete: (res) => {
+                if (res.responseText == 'success') {
+                    bar.width('100%');
+                    bar.text('100%');
+                    setTimeout(function () {
+                        alert('Video uploaded successfully');
+                    }, 10);
+                } else {
+                    alert(res.responseText);
+                }
+                location.reload();
+            }
+        });
+    }
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+    };
+
+    function convertPercent() {
+        $.ajax({
+            url: 'videos/ffmpeg-progress',
+            type: "GET",
+            complete: (res) => {
+                if (parseInt(res.responseText) < 100) {
+                    bar.width(res.responseText + '%');
+                    bar.text(res.responseText + '%');
+                    setTimeout(convertPercent, 1000);
+                }
+            }
+        });
+    }
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('img').attr('src', e.target.result);
+                $('img').show();
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#thumbnail").change(function () {
+        readURL(this);
+    });
+</script>

@@ -1,0 +1,66 @@
+<%- include('partials/header.ejs') %>
+
+<style>
+    .img-thumbnail {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+
+<!-- content start -->
+<div class="main">
+    <div class="d-flex head">
+        <h2 class="heading">Videos</h2>
+        <a href="videos-add?id=<%= category %>" class="ml-auto"><button type="button" class="btn btn-info">Add
+            Videos</button></a>
+    </div>
+    <div class="content">
+        <div class="row text-center text-lg-left mt-3">
+            <% if(!videos[0]) { %>
+            <div class="col-12 text-center">
+                <h2>No Videos</h2>
+            </div>
+            <% } else { %>
+            <% videos.forEach(function(video){ %>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="d-block mb-4 h-100" style="position: relative;">
+                    <img class="img-fluid img-thumbnail" src="../dist/thumbnail/<%= video.thumbnail %>" alt="">
+                    <button class="btn btn-danger" style="width: 100%;"
+                        onclick="deletevideo('<%= video._id %>')">Delete</button>
+                </div>
+            </div>
+            <% }) %>
+            <% } %>
+        </div>
+    </div>
+</div>
+</form>
+
+<%- include ('partials/footer.ejs') %>
+
+<script>
+    activeSideBar('video-categories');
+    $("#home_expand").text('expand_less');
+    $('#home_submenu').show();
+
+    function deletevideo(id) {
+        if (confirm('Do you really want to delete this video')) {
+            // DO POST
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "videos/deletevideo",
+                data: JSON.stringify({
+                    id: id
+                })
+            }).done(res => {
+                if (res == 'success') {
+                    location.reload();
+                } else {
+                    alert(res);
+                }
+            });
+        }
+    }
+</script>
