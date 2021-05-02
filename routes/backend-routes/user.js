@@ -11,6 +11,8 @@ const root = process.cwd();
 const reader = require('xlsx');
 const excelFilter = require('../../config/excelFilter');
 const multer = require('multer');
+const json2xls = require('json2xls');
+const fs = require('fs');
 
 // Set The Video Storage Engine
 const storage = multer.diskStorage({
@@ -40,7 +42,7 @@ router.get('/users', NotLoggedIn, async (req, res) => {
         });
     } catch (error) {
         return res.send('Something went wrong please try again later');
-        }
+    }
 });
 
 router.post('/users/addnewuser', NotLoggedIn, async (req, res) => {
@@ -201,19 +203,35 @@ router.post('/users/importexcel', NotLoggedIn, async (req, res) => {
                             });
                             await plan.save();
                         } catch (error) {
-                            console.log(error);
+                            // console.log(error);
                         }
                     }
                 });
             }
-
-            return res.send('success');
+            setTimeout(() => {
+                return res.send('success');
+            }, 2000);
         });
     } catch (error) {
         console.log(error);
         return res.send('Somthing went wrong please try again later');
     }
 });
+
+router.get('/users/exportexcel', NotLoggedIn, async (req, res) => {
+    try {
+        let users = await User.find();
+        users = await addPlan(users);
+        var xls = json2xls(users);
+        fs.writeFileSync('data.xlsx', xls, 'binary');
+        return res.sendFile(path.join(root + '/data.xlsx'));
+    } catch (error) {
+        console.log(error);
+        return res.send('Something went wrong please try again later');
+    }
+
+});
+
 
 const formatData = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -232,6 +250,33 @@ const formatData = (data) => {
             }
         }
         resolve(data);
+    });
+}
+
+const addPlan = (data) => {
+    let updateData = [];
+    return new Promise(async (resolve, reject) => {
+        for (var i in data) {
+            try {
+                const plan = await Plan.findOne({
+                    user: data[i]._id
+                });
+                updateData[i] = {
+                    Name: data[i].name,
+                    'Phone': data[i].phone,
+                    Months: plan.months,
+                    Amount: plan.amount,
+                    Videos: plan.videos ? 'yes' : 'no',
+                    Notes: plan.notes ? 'yes' : 'no',
+                    'Sociology Videos': plan.sociology_videos ? 'yes' : 'no',
+                    'Sociology Notes': plan.sociology_notes ? 'yes' : 'no',
+                    'Plan Expiry Date': moment(parseInt(plan.active_date)).add(plan.months, 'M').format('DD MMM YYYY'),
+                };
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        resolve(updateData);
     });
 }
 
