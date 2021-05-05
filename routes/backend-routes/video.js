@@ -54,6 +54,7 @@ router.get('/videos-add', NotLoggedIn, async (req, res) => {
 });
 
 router.post('/videos/addvideo', NotLoggedIn, (req, res) => {
+    req.setTimeout(0);
     upload(req, res, async function (err) {
         if (req.fileValidationError) {
             return res.send(req.fileValidationError);
