@@ -48,6 +48,7 @@ const admin_sociologyvideoR = require('./routes/backend-routes/sociologyvideo');
 const sociologyvideosubcategoryR = require('./routes/backend-routes/sociologyvideosubcategory');
 const sociologyvideocategoryR = require('./routes/backend-routes/sociologyvideocategory');
 const currentaffairR = require('./routes/backend-routes/currentaffair');
+const admin_systeminfoR = require('./routes/backend-routes/systeminfo');
 
 // Upload routes
 const uploadR = require('./routes/backend-routes/upload');
@@ -100,6 +101,7 @@ const AppRoutes = app => {
     app.use('/admin', sociologyvideosubcategoryR);
     app.use('/admin', sociologyvideocategoryR);
     app.use('/admin', currentaffairR);
+    app.use('/admin', admin_systeminfoR);
 
 
 

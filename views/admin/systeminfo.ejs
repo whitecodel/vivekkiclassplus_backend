@@ -1,0 +1,80 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main">
+    <div class="d-flex head">
+        <h2 class="heading">System Information</h2>
+        <button class="btn btn-primary ml-auto" onclick="window.location.reload()">Refresh</button>
+    </div>
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-4 col-sm-6 col-xm-12">
+                <div class="mb-2">
+                    <span class="font-weight-bold">Uptime timing: </span>
+                    <%= uptime %>
+                </div>
+                <div class="mb-2">
+                    <span class="font-weight-bold">CPU Cores: </span>
+                    <%= cpu_cores %>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xm-12">
+                <div class="mb-2">
+                    <span class="font-weight-bold">Total Disk: </span>
+                    <%= totaldisk %>
+                </div>
+                <div class="mb-2">
+                    <span class="font-weight-bold">Used Disk: </span>
+                    <%= useddisk %>
+                </div>
+                <div class="mb-2">
+                    <span class="font-weight-bold">Free Disk: </span>
+                    <%= freedisk %> | <%= useddisk_p %>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xm-12">
+                <div class="mb-2">
+                    <span class="font-weight-bold">Total Ram: </span>
+                    <%= totalram %>
+                </div>
+                <div class="mb-2">
+                    <span class="font-weight-bold">Free Ram: </span>
+                    <%= freeram %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+
+        <%- include('partials/footer.ejs') %>
+        <script>
+            activeSideBar('systeminfo');
+
+            const form = $('form');
+
+            form.on('submit', submitHandler)
+
+            function submitHandler(e) {
+                e.preventDefault()
+
+                // PREPARE FORM DATA
+                var formData = {
+                    newpassword: form.serializeArray()[0].value
+                };
+
+                // DO POST
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "changepassword",
+                    data: JSON.stringify(formData)
+                }).done(res => {
+                    if (res == 'success') {
+                        // alert('Password updated successfully');
+                        window.location.reload();
+                    } else {
+                        alert(res);
+                    }
+                });
+            }
+        </script>
