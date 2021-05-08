@@ -8,7 +8,7 @@
     </div>
     <div class="content">
         <div class="row">
-            <div class="col-lg-4 col-sm-6 col-xm-12">
+            <div class="col-lg-6 col-sm-12 col-xm-12">
                 <div class="mb-2">
                     <span class="font-weight-bold">Uptime timing: </span>
                     <%= uptime %>
@@ -18,24 +18,28 @@
                     <%= cpu_cores %>
                 </div>
             </div>
-            <div class="col-lg-4 col-sm-6 col-xm-12">
+            <div class="col-lg-3 col-sm-12 col-xm-12">
                 <div class="mb-2">
                     <span class="font-weight-bold">Total Disk: </span>
                     <%= totaldisk %>
                 </div>
                 <div class="mb-2">
                     <span class="font-weight-bold">Used Disk: </span>
-                    <%= useddisk %>
+                    <%= useddisk %> | <%= useddisk_p %>
                 </div>
                 <div class="mb-2">
                     <span class="font-weight-bold">Free Disk: </span>
-                    <%= freedisk %> | <%= useddisk_p %>
+                    <%= freedisk %>
                 </div>
             </div>
-            <div class="col-lg-4 col-sm-6 col-xm-12">
+            <div class="col-lg-3 col-sm-12 col-xm-12">
                 <div class="mb-2">
                     <span class="font-weight-bold">Total Ram: </span>
                     <%= totalram %>
+                </div>
+                <div class="mb-2">
+                    <span class="font-weight-bold">Used Ram: </span>
+                    <%= usedram %>
                 </div>
                 <div class="mb-2">
                     <span class="font-weight-bold">Free Ram: </span>
