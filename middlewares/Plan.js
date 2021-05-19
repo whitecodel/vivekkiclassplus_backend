@@ -5,7 +5,7 @@ const NoActivePlan = async (req, res, next) => {
         user: req.user._id
     });
     const activePlan = await longWork(plans);
-    console.log(activePlan)
+    // console.log(activePlan)
     req.activePlan = activePlan;
     next();
 }

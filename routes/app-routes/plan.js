@@ -34,19 +34,21 @@ router.get('/', [NotLoggedIn, NoActivePlan], async (req, res) => {
 });
 
 const formatData = (data) => {
+    let updatedData = [];
     return new Promise((resolve, reject) => {
         for (var i in data) {
+            updatedData[i] = {};
             if (Date.now() > parseInt(data[i].active_date) + 1000 * 60 * 60 * 24 * 30 * parseInt(data[i].months)) {
-                data[i].expired = true;
+                updatedData[i].expired = true;
             } else {
-                data[i].expired = false;
+                updatedData[i].expired = false;
             }
-            data[i].expired_date = moment(parseInt(parseInt(data[i].active_date) + 1000 * 60 * 60 * 24 * 30 * parseInt(data[i].months))).format('DD MMM YYYY');
-            data[i].active_date = moment(parseInt(data[i].active_date)).format('DD MMM YYYY');
-            data[i].months = data[i].months;
-            data[i].amount = data[i].amount;
+            updatedData[i].expired_date = moment(parseInt(data[i].active_date)).add(data[i].months, 'M').format('DD MMM YYYY');
+            updatedData[i].active_date = moment(parseInt(data[i].active_date)).format('DD MMM YYYY');
+            updatedData[i].months = data[i].months;
+            updatedData[i].amount = data[i].amount;
         }
-        resolve(data);
+        resolve(updatedData);
     })
 }
 
