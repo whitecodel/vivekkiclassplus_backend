@@ -22,7 +22,7 @@ router.post('/', [NotLoggedIn, NoActivePlan], async (req, res) => {
         const notes = await Note.find({
             category: req.body.category,
         }).sort({
-            created_at: -1
+            created_at: 1
         });
         msg = notes;
     } catch (err) {
