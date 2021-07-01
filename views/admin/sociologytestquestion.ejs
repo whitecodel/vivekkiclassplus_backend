@@ -1,0 +1,284 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main">
+  <div class="d-flex head">
+    <h2 class="heading">Sociology Test questions :-</h2>
+    <button
+      type="button"
+      class="btn btn-info ml-auto"
+      data-toggle="modal"
+      data-target="#addnewtestquestion"
+    >
+      Add New
+    </button>
+  </div>
+  <div class="content">
+    <table
+      id="example"
+      class="table table-striped table-bordered add-button"
+      style="width: 100%"
+    >
+      <thead>
+        <tr>
+          <th class="text-center">Question</th>
+          <th class="text-center">Option-A</th>
+          <th class="text-center">Option-B</th>
+          <th class="text-center">Option-C</th>
+          <th class="text-center">Option-D</th>
+          <th class="text-center">Right</th>
+          <th class="text-center">Edit</th>
+          <th class="text-center">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(!questions[0]) { %>
+        <tr>
+          <td colspan="100%" class="text-center">No Test questions</td>
+        </tr>
+        <% } else {%> <% questions.forEach(function(question){ %>
+        <tr>
+          <td class="text-center"><%= question.question %></td>
+          <td class="text-center"><%= question.option_a %></td>
+          <td class="text-center"><%= question.option_b %></td>
+          <td class="text-center"><%= question.option_c %></td>
+          <td class="text-center"><%= question.option_d %></td>
+          <td class="text-center"><%= question.right_answer %></td>
+          <td class="text-center" style="width: 12px">
+            <!-- <i
+              class="material-icons table-icon btn edit-icon"
+              data-toggle="modal"
+              data-target="#edittestquestion"
+              onclick="editformupdate('<%= question._id %>', '<%= question.name %>');"
+              >edit</i
+            > -->
+          </td>
+
+          <td class="text-center" style="width: 12px">
+            <!-- <i
+              class="material-icons table-icon btn delete-icon"
+              onclick="deletetestquestion('<%= question._id %>');"
+              >delete</i
+            > -->
+          </td>
+        </tr>
+        <% }); %> <% } %>
+      </tbody>
+      <tfoot></tfoot>
+    </table>
+  </div>
+  <div>
+    <!-- Add testquestion Modal -->
+    <div class="modal fade" id="addnewtestquestion">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add New sociology Test question</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="addnewtestquestionform" class="mx-5">
+              <div class="mb-3">
+                <label>Enter Question</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="question"
+                  name="question"
+                  placeholder="Question"
+                />
+              </div>
+              <div class="mb-3">
+                <label>Option A</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="option_a"
+                  placeholder="A"
+                />
+              </div>
+              <div class="mb-3">
+                <label>Option B</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="option_b"
+                  placeholder="B"
+                />
+              </div>
+              <div class="mb-3">
+                <label>Option C</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="option_c"
+                  placeholder="C"
+                />
+              </div>
+              <div class="mb-3">
+                <label>Option D</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="option_d"
+                  placeholder="D"
+                />
+              </div>
+              <div class="mb-3">
+                <label>Right Answer</label>
+                <select class="form-control" name="right_answer">
+                  <option value="a">A</option>
+                  <option value="b">B</option>
+                  <option value="c">C</option>
+                  <option value="d">D</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                Add
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit testquestion Modal -->
+    <div class="modal fade" id="edittestquestion">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Edit testquestion</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="edittestquestion" class="mx-5">
+              <input type="hidden" id="editid" name="editid" />
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editname"
+                  name="editname"
+                  placeholder="question"
+                />
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                edit
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include ('partials/footer.ejs') %>
+
+    <script>
+      activeSideBar("sociology-test-questions");
+      $("#home_expand1").text("expand_more");
+      $("#home_submenu1").show();
+
+      $(document).ready(function () {
+        $("#example").DataTable();
+      });
+
+      var addtestquestionform = $("#addnewtestquestion");
+
+      addtestquestionform.on("submit", addtestquestionsubmitHandler);
+
+      function addtestquestionsubmitHandler(e) {
+        e.preventDefault();
+
+        // form data
+        var formData = getFormData(edittestform);
+
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: window.location + "/add",
+          data: formData,
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+
+      var edittestquestionform = $("#edittestquestion");
+
+      edittestquestionform.on("submit", edittestquestionsubmitHandler);
+
+      function edittestquestionsubmitHandler(e) {
+        e.preventDefault();
+
+        var phonePattern = /^\d{10}$/;
+        var emailPattern =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        // vaidation
+        if ($("#editname").val() == "") {
+          alert("question is required");
+          return false;
+        } else if ($("#editname").val().length > 50) {
+          alert("question max length is 50 charactor");
+          return false;
+        }
+
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: window.location + "/update",
+          data: JSON.stringify({
+            id: $("#editid").val(),
+            name: $("#editname").val(),
+          }),
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+
+      function editformupdate(id, name) {
+        $("#editid").val(id);
+        $("#editname").val(name);
+      }
+
+      function deletetestquestion(id) {
+        if (confirm("Do you really want to delete this question")) {
+          // DO POST
+          $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: window.location + "/delete",
+            data: JSON.stringify({
+              id: id,
+            }),
+          }).done((res) => {
+            if (res == "success") {
+              location.reload();
+            } else {
+              alert(res);
+            }
+          });
+        }
+      }
+    </script>
+  </div>
+</div>
