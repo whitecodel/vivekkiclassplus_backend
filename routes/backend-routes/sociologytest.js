@@ -3,6 +3,7 @@ const { NotLoggedIn } = require("../../middlewares/Adminauth");
 const {
   addsociologyTest,
   questionView,
+  importExcel,
   addMoreQuestions,
   getsociologyTest,
   deletesociologyTest,
@@ -22,13 +23,11 @@ const {
 router.get("/sociologytest/", getsociologyTest);
 router.post("/sociologytest/add", addsociologyTest);
 router.get("/sociologytest/questions", questionView);
+router.post("/sociologytest/importexcel", importExcel);
 router.post("/sociologytest/addquestions", addMoreQuestions);
 router.post("/sociologytest/update", updatesociologyTest);
 router.post("/sociologytest/updatequestion", updateQuestionsociologyTest);
-router.delete(
-  "/sociologytest/deletequestion/:testid/:quesid",
-  deleteQuestionsociologyTest
-);
+router.post("/sociologytest/deletequestion", deleteQuestionsociologyTest);
 router.post("/sociologytest/delete", deletesociologyTest);
 
 module.exports = router;

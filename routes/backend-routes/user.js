@@ -12,7 +12,7 @@ const multer = require("multer");
 const json2xls = require("json2xls");
 const fs = require("fs");
 
-// Set The Video Storage Engine
+// Set The Storage Engine
 const storage = multer.diskStorage({
   destination: path.join(__dirname, "/../../tmp"),
   filename: function (req, files, cb) {
@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
   },
 });
 
-// Init Video Upload
+// Init Upload
 const upload = multer({
   storage: storage,
   // limits: {

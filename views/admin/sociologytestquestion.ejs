@@ -6,11 +6,11 @@
     <h2 class="heading">Sociology Test questions :-</h2>
     <button
       type="button"
-      class="btn btn-info ml-auto"
+      class="btn btn-lite ml-auto"
       data-toggle="modal"
-      data-target="#addnewtestquestion"
+      data-target="#uploadExcel"
     >
-      Add New
+      Import Excel
     </button>
   </div>
   <div class="content">
@@ -27,7 +27,6 @@
           <th class="text-center">Option-C</th>
           <th class="text-center">Option-D</th>
           <th class="text-center">Right</th>
-          <th class="text-center">Edit</th>
           <th class="text-center">Delete</th>
         </tr>
       </thead>
@@ -45,21 +44,11 @@
           <td class="text-center"><%= question.option_d %></td>
           <td class="text-center"><%= question.right_answer %></td>
           <td class="text-center" style="width: 12px">
-            <!-- <i
-              class="material-icons table-icon btn edit-icon"
-              data-toggle="modal"
-              data-target="#edittestquestion"
-              onclick="editformupdate('<%= question._id %>', '<%= question.name %>');"
-              >edit</i
-            > -->
-          </td>
-
-          <td class="text-center" style="width: 12px">
-            <!-- <i
+            <i
               class="material-icons table-icon btn delete-icon"
               onclick="deletetestquestion('<%= question._id %>');"
               >delete</i
-            > -->
+            >
           </td>
         </tr>
         <% }); %> <% } %>
@@ -68,13 +57,13 @@
     </table>
   </div>
   <div>
-    <!-- Add testquestion Modal -->
-    <div class="modal fade" id="addnewtestquestion">
+    <!-- Upload Excel Modal -->
+    <div class="modal fade" id="uploadExcel">
       <div class="modal-dialog">
         <div class="modal-content">
           <!-- Modal Header -->
           <div class="modal-header">
-            <h4 class="modal-title">Add New sociology Test question</h4>
+            <h4 class="modal-title">Add New questions</h4>
             <button type="button" class="close" data-dismiss="modal">
               &times;
             </button>
@@ -82,98 +71,18 @@
 
           <!-- Modal body -->
           <div class="modal-body">
-            <form id="addnewtestquestionform" class="mx-5">
+            <form id="uploadexcel" class="mx-5">
               <div class="mb-3">
-                <label>Enter Question</label>
+                <label>Select Excel:</label>
                 <input
-                  type="text"
+                  id="excel"
+                  name="excel"
+                  type="file"
                   class="form-control"
-                  id="question"
-                  name="question"
-                  placeholder="Question"
                 />
-              </div>
-              <div class="mb-3">
-                <label>Option A</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="option_a"
-                  placeholder="A"
-                />
-              </div>
-              <div class="mb-3">
-                <label>Option B</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="option_b"
-                  placeholder="B"
-                />
-              </div>
-              <div class="mb-3">
-                <label>Option C</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="option_c"
-                  placeholder="C"
-                />
-              </div>
-              <div class="mb-3">
-                <label>Option D</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="option_d"
-                  placeholder="D"
-                />
-              </div>
-              <div class="mb-3">
-                <label>Right Answer</label>
-                <select class="form-control" name="right_answer">
-                  <option value="a">A</option>
-                  <option value="b">B</option>
-                  <option value="c">C</option>
-                  <option value="d">D</option>
-                </select>
               </div>
               <button type="submit" class="btn btn-info mt-3 pull-right">
                 Add
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit testquestion Modal -->
-    <div class="modal fade" id="edittestquestion">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">Edit testquestion</h4>
-            <button type="button" class="close" data-dismiss="modal">
-              &times;
-            </button>
-          </div>
-
-          <!-- Modal body -->
-          <div class="modal-body">
-            <form id="edittestquestion" class="mx-5">
-              <input type="hidden" id="editid" name="editid" />
-              <div class="mb-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="editname"
-                  name="editname"
-                  placeholder="question"
-                />
-              </div>
-              <button type="submit" class="btn btn-info mt-3 pull-right">
-                edit
               </button>
             </form>
           </div>
@@ -192,21 +101,31 @@
         $("#example").DataTable();
       });
 
-      var addtestquestionform = $("#addnewtestquestion");
+      var uploadexcelform = $("#uploadexcel");
 
-      addtestquestionform.on("submit", addtestquestionsubmitHandler);
+      uploadexcelform.on("submit", addquestionssubmitHandler);
 
-      function addtestquestionsubmitHandler(e) {
+      function addquestionssubmitHandler(e) {
         e.preventDefault();
 
-        // form data
-        var formData = getFormData(edittestform);
+        // vaidation
+        if ($("#excel").get(0).files.length === 0) {
+          alert("No files selected");
+          return false;
+        }
+
+        // PREPARE FORM DATA
+        var formData = new FormData($("form")[0]);
+        formData.append("id", getUrlParameter("id"));
 
         // DO POST
         $.ajax({
           type: "POST",
-          contentType: "application/json",
-          url: window.location + "/add",
+          cache: false,
+          enctype: "multipart/form-data",
+          processData: false,
+          contentType: false,
+          url: "/admin/sociologytest" + "/importexcel",
           data: formData,
         }).done((res) => {
           if (res == "success") {
@@ -217,58 +136,16 @@
         });
       }
 
-      var edittestquestionform = $("#edittestquestion");
-
-      edittestquestionform.on("submit", edittestquestionsubmitHandler);
-
-      function edittestquestionsubmitHandler(e) {
-        e.preventDefault();
-
-        var phonePattern = /^\d{10}$/;
-        var emailPattern =
-          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-        // vaidation
-        if ($("#editname").val() == "") {
-          alert("question is required");
-          return false;
-        } else if ($("#editname").val().length > 50) {
-          alert("question max length is 50 charactor");
-          return false;
-        }
-
-        // DO POST
-        $.ajax({
-          type: "POST",
-          contentType: "application/json",
-          url: window.location + "/update",
-          data: JSON.stringify({
-            id: $("#editid").val(),
-            name: $("#editname").val(),
-          }),
-        }).done((res) => {
-          if (res == "success") {
-            location.reload();
-          } else {
-            alert(res);
-          }
-        });
-      }
-
-      function editformupdate(id, name) {
-        $("#editid").val(id);
-        $("#editname").val(name);
-      }
-
       function deletetestquestion(id) {
         if (confirm("Do you really want to delete this question")) {
           // DO POST
           $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: window.location + "/delete",
+            url: "/admin/sociologytest" + "/deletequestion",
             data: JSON.stringify({
-              id: id,
+              testid: getUrlParameter("id"),
+              quesid: id,
             }),
           }).done((res) => {
             if (res == "success") {

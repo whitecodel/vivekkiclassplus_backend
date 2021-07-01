@@ -1,454 +1,645 @@
 <%- include('partials/header.ejs') %>
 
-<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
-    rel="stylesheet">
+<link
+  href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+  rel="stylesheet"
+/>
 
 <!-- content start -->
 <div class="main">
-    <div class="d-flex head">
-        <h2 class="heading">Users :-</h2>
-        <button type="button" class="btn btn-danger ml-auto" onclick="deleteAllUsers()" disabled>Delete All Users</button>
-        <a href="users/users.xlsx"><button style="height: 100%;" type="button" class="btn btn-warning ml-3">Sample File</button></a>
-        <button type="button" class="btn btn-light ml-3" data-toggle="modal" data-target="#uploadExcel">Import Excel</button>
-        <a href="users/exportexcel"><button style="height: 100%;" type="button" class="btn btn-success ml-3">Export Excel</button></a>
-        <button type="button" class="btn btn-info ml-3" data-toggle="modal" data-target="#addnewUser">Add New</button>
+  <div class="d-flex head">
+    <h2 class="heading">Users :-</h2>
+    <button
+      type="button"
+      class="btn btn-danger ml-auto"
+      onclick="deleteAllUsers()"
+      disabled
+    >
+      Delete All Users
+    </button>
+    <a href="users/users.xlsx"
+      ><button style="height: 100%" type="button" class="btn btn-warning ml-3">
+        Sample File
+      </button></a
+    >
+    <button
+      type="button"
+      class="btn btn-light ml-3"
+      data-toggle="modal"
+      data-target="#uploadExcel"
+    >
+      Import Excel
+    </button>
+    <a href="users/exportexcel"
+      ><button style="height: 100%" type="button" class="btn btn-success ml-3">
+        Export Excel
+      </button></a
+    >
+    <button
+      type="button"
+      class="btn btn-info ml-3"
+      data-toggle="modal"
+      data-target="#addnewUser"
+    >
+      Add New
+    </button>
+  </div>
+  <div class="content" style="overflow-y: auto">
+    <table
+      id="example"
+      class="table table-striped table-bordered add-button"
+      style="width: 100%; white-space: nowrap"
+    >
+      <thead>
+        <tr>
+          <th class="text-center">Name</th>
+          <th class="text-center">Mobile Number</th>
+          <th class="text-center">Months</th>
+          <th class="text-center">Amount</th>
+          <th class="text-center">Videos</th>
+          <th class="text-center">Notes</th>
+          <th class="text-center">Sociology Videos</th>
+          <th class="text-center">Sociology Notes</th>
+          <th class="text-center">Active Date</th>
+          <th class="text-center">Expiry Date</th>
+          <th class="text-center">Update Time</th>
+          <th class="text-center">Edit</th>
+          <th class="text-center">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(!plans[0]) { %>
+        <tr>
+          <td colspan="100%" class="text-center">No Subscriptions</td>
+        </tr>
+        <% } else {%> <% plans.forEach(function(plan){ %>
+        <tr>
+          <td class="text-center"><%= plan.name %></td>
+          <td class="text-center"><%= plan.phone %></td>
+          <td class="text-center"><%= plan.months %></td>
+          <td class="text-center"><%= plan.amount %></td>
+          <td class="text-center">
+            <%- plan.videos ? '<i class="material-icons bg-success text-white"
+              >done</i
+            >' : '<i class="material-icons bg-danger text-white">close</i>' %>
+          </td>
+          <td class="text-center">
+            <%- plan.notes ? '<i class="material-icons bg-success text-white"
+              >done</i
+            >' : '<i class="material-icons bg-danger text-white">close</i>' %>
+          </td>
+          <td class="text-center">
+            <%- plan.sociology_videos ? '<i
+              class="material-icons bg-success text-white"
+              >done</i
+            >' : '<i class="material-icons bg-danger text-white">close</i>' %>
+          </td>
+          <td class="text-center">
+            <%- plan.sociology_notes ? '<i
+              class="material-icons bg-success text-white"
+              >done</i
+            >' : '<i class="material-icons bg-danger text-white">close</i>' %>
+          </td>
+          <td class="text-center"><%= plan.active_date %></td>
+          <td class="text-center"><%= plan.expiry_date %></td>
+          <td class="text-center"><%= plan.last_update_time %></td>
+          <td class="text-center" style="width: 12px">
+            <i
+              class="material-icons table-icon btn text-primary"
+              data-toggle="modal"
+              data-target="#editUser"
+              onclick="editformupdate('<%= plan.user %>', '<%= plan.name %>', '<%= plan.phone %>', '<%= plan.months %>', '<%= plan.amount %>', '<%= plan.videos %>', '<%= plan.notes %>', '<%= plan.sociology_videos %>', '<%= plan.sociology_notes %>');"
+              >edit</i
+            >
+          </td>
+          <td class="text-center" style="width: 12px">
+            <i
+              class="material-icons table-icon btn delete-icon"
+              onclick="deleteuser('<%= plan.user%>');"
+              >delete</i
+            >
+          </td>
+        </tr>
+        <% }); %> <% } %>
+      </tbody>
+      <tfoot></tfoot>
+    </table>
+  </div>
+  <div>
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addnewUser">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add New User</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="addnewuser" class="mx-5">
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  placeholder="Full Name"
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="phone"
+                  name="phone"
+                  placeholder="Mobile Number"
+                />
+              </div>
+              <div id="plan-enable" style="display: block">
+                <label>Plan: </label>
+                <div class="mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="months"
+                    name="months"
+                    placeholder="Months"
+                  />
+                </div>
+                <div class="mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="amount"
+                    name="amount"
+                    placeholder="Amount (RS.)"
+                  />
+                </div>
+                <div class="mb-3" style="display: flex">
+                  <div style="display: flex">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="videos"
+                      name="videos"
+                      checked
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Net Videos</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="notes"
+                      name="notes"
+                      checked
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Net Notes</label
+                    >
+                  </div>
+                </div>
+                <div class="mb-3" style="display: flex">
+                  <div style="display: flex">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="sociology_videos"
+                      name="sociology_videos"
+                      checked
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >sociology Videos</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="sociology_notes"
+                      name="sociology_notes"
+                      checked
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >sociology Notes</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                Add
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="content" style="overflow-y: auto;">
-        <table id="example" class="table table-striped table-bordered add-button"
-            style="width:100%; white-space: nowrap;">
-            <thead>
-                <tr>
-                    <th class="text-center">Name</th>
-                    <th class="text-center">Mobile Number</th>
-                    <th class="text-center">Months</th>
-                    <th class="text-center">Amount</th>
-                    <th class="text-center">Videos</th>
-                    <th class="text-center">Notes</th>
-                    <th class="text-center">Sociology Videos</th>
-                    <th class="text-center">Sociology Notes</th>
-                    <th class="text-center">Active Date</th>
-                    <th class="text-center">Expiry Date</th>
-                    <th class="text-center">Update Time</th>
-                    <th class="text-center">Edit</th>
-                    <th class="text-center">Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if(!plans[0]) { %>
-                <tr>
-                    <td colspan="100%" class="text-center">No Subscriptions</td>
-                </tr>
-                <% } else {%>
-                <% plans.forEach(function(plan){ %>
-                <tr>
-                    <td class="text-center"><%= plan.name %></td>
-                    <td class="text-center"><%= plan.phone %></td>
-                    <td class="text-center"><%= plan.months %></td>
-                    <td class="text-center"><%= plan.amount %></td>
-                    <td class="text-center">
-                        <%- plan.videos ? '<i class="material-icons bg-success text-white">done</i>' : '<i class="material-icons bg-danger text-white">close</i>' %>
-                    </td>
-                    <td class="text-center">
-                        <%- plan.notes ? '<i class="material-icons bg-success text-white">done</i>' : '<i class="material-icons bg-danger text-white">close</i>' %>
-                    </td>
-                    <td class="text-center">
-                        <%- plan.sociology_videos ? '<i class="material-icons bg-success text-white">done</i>' : '<i class="material-icons bg-danger text-white">close</i>' %>
-                    </td>
-                    <td class="text-center">
-                        <%- plan.sociology_notes ? '<i class="material-icons bg-success text-white">done</i>' : '<i class="material-icons bg-danger text-white">close</i>' %>
-                    </td>
-                    <td class="text-center"><%= plan.active_date %></td>
-                    <td class="text-center"><%= plan.expiry_date %></td>
-                    <td class="text-center"><%= plan.last_update_time %></td>
-                    <td class=" text-center" style="width: 12px;"><i class="material-icons table-icon btn text-primary"
-                            data-toggle="modal" data-target="#editUser"
-                            onclick="editformupdate('<%= plan.user %>', '<%= plan.name %>', '<%= plan.phone %>', '<%= plan.months %>', '<%= plan.amount %>', '<%= plan.videos %>', '<%= plan.notes %>', '<%= plan.sociology_videos %>', '<%= plan.sociology_notes %>');">edit</i>
-                    </td>
-                    <td class=" text-center" style="width: 12px;"><i class="material-icons table-icon btn delete-icon"
-                            onclick="deleteuser('<%= plan.user%>');">delete</i>
-                    </td>
-                </tr>
-                <% }); %> <% } %>
-            </tbody>
-            <tfoot>
-            </tfoot>
-        </table>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUser">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Edit User</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="edituser" class="mx-5">
+              <div class="mb-3">
+                <input
+                  type="checkbox"
+                  id="plan"
+                  data-width="100%"
+                  checked
+                  data-toggle="toggle"
+                  data-on="Edit Plan"
+                  data-off="Add New Plan"
+                  data-onstyle="info"
+                  data-offstyle="success"
+                />
+              </div>
+              <input type="hidden" id="editid" name="editid" />
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editname"
+                  name="neditame"
+                  placeholder="Full Name"
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editphone"
+                  name="editphone"
+                  placeholder="Mobile Number"
+                />
+              </div>
+              <div id="plan-enable" style="display: block">
+                <label>Plan: </label>
+                <div class="mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editmonths"
+                    name="editmonths"
+                    placeholder="Months"
+                  />
+                </div>
+                <div class="mb-3">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editamount"
+                    name="editamount"
+                    placeholder="Amount (RS.)"
+                  />
+                </div>
+                <div class="mb-3" style="display: flex">
+                  <div style="display: flex">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="editvideos"
+                      name="editvideos"
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Net Videos</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="editnotes"
+                      name="editnotes"
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Net Notes</label
+                    >
+                  </div>
+                </div>
+                <div class="mb-3" style="display: flex">
+                  <div style="display: flex">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="editsociologyvideos"
+                      name="editsociologyvideos"
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >sociology Videos</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="editsociologynotes"
+                      name="editsociologynotes"
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >sociology Notes</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                save
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
 
-        <!-- Add User Modal -->
-        <div class="modal fade" id="addnewUser">
-            <div class="modal-dialog">
-                <div class="modal-content">
+    <!-- Upload Excel Modal -->
+    <div class="modal fade" id="uploadExcel">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add New Users</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
 
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Add New User</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <form id="addnewuser" class="mx-5">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Full Name">
-                            </div>
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="phone" name="phone"
-                                    placeholder="Mobile Number">
-                            </div>
-                            <div id="plan-enable" style="display: block;">
-                                <label>Plan: </label>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="months" name="months"
-                                        placeholder="Months">
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="amount" name="amount"
-                                        placeholder="Amount (RS.)">
-                                </div>
-                                <div class="mb-3" style="display: flex;">
-                                    <div style="display: flex;">
-                                        <input type="checkbox" class="form-control" id="videos" name="videos" checked>
-                                        <label style="margin-left: 10px; margin-top: 9px;">Net Videos</label>
-                                    </div>
-                                    <div style="display: flex; margin-left: 20px;">
-                                        <input type="checkbox" class="form-control" id="notes" name="notes" checked>
-                                        <label style="margin-left: 10px; margin-top: 9px;">Net Notes</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3" style="display: flex;">
-                                    <div style="display: flex;">
-                                        <input type="checkbox" class="form-control" id="sociology_videos"
-                                            name="sociology_videos" checked>
-                                        <label style="margin-left: 10px; margin-top: 9px;">sociology Videos</label>
-                                    </div>
-                                    <div style="display: flex; margin-left: 20px;">
-                                        <input type="checkbox" class="form-control" id="sociology_notes"
-                                            name="sociology_notes" checked>
-                                        <label style="margin-left: 10px; margin-top: 9px;">sociology Notes</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-info mt-3 pull-right">Add</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="uploadexcel" class="mx-5">
+              <div class="mb-3">
+                <label>Select Excel:</label>
+                <input
+                  id="excel"
+                  name="excel"
+                  type="file"
+                  class="form-control"
+                />
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                Add
+              </button>
+            </form>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Edit User Modal -->
-        <div class="modal fade" id="editUser">
-            <div class="modal-dialog">
-                <div class="modal-content">
+    <%- include ('partials/footer.ejs') %>
 
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Edit User</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
+    <script>
+      activeSideBar("users");
 
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <form id="edituser" class="mx-5">
-                            <div class="mb-3">
-                                <input type="checkbox" id="plan" data-width="100%" checked data-toggle="toggle"
-                                    data-on="Edit Plan" data-off="Add New Plan" data-onstyle="info"
-                                    data-offstyle="success">
-                            </div>
-                            <input type="hidden" id="editid" name="editid">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="editname" name="neditame"
-                                    placeholder="Full Name">
-                            </div>
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="editphone" name="editphone"
-                                    placeholder="Mobile Number">
-                            </div>
-                            <div id="plan-enable" style="display: block;">
-                                <label>Plan: </label>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="editmonths" name="editmonths"
-                                        placeholder="Months">
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="editamount" name="editamount"
-                                        placeholder="Amount (RS.)">
-                                </div>
-                                <div class="mb-3" style="display: flex;">
-                                    <div style="display: flex;">
-                                        <input type="checkbox" class="form-control" id="editvideos" name="editvideos">
-                                        <label style="margin-left: 10px; margin-top: 9px;">Net Videos</label>
-                                    </div>
-                                    <div style="display: flex; margin-left: 20px;">
-                                        <input type="checkbox" class="form-control" id="editnotes" name="editnotes">
-                                        <label style="margin-left: 10px; margin-top: 9px;">Net Notes</label>
-                                    </div>
-                                </div>
-                                <div class="mb-3" style="display: flex;">
-                                    <div style="display: flex;">
-                                        <input type="checkbox" class="form-control" id="editsociologyvideos"
-                                            name="editsociologyvideos">
-                                        <label style="margin-left: 10px; margin-top: 9px;">sociology Videos</label>
-                                    </div>
-                                    <div style="display: flex; margin-left: 20px;">
-                                        <input type="checkbox" class="form-control" id="editsociologynotes"
-                                            name="editsociologynotes">
-                                        <label style="margin-left: 10px; margin-top: 9px;">sociology Notes</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-info mt-3 pull-right">save</button>
-                        </form>
-                    </div>
+      $(document).ready(function () {
+        $("#example").DataTable();
+      });
 
-                </div>
-            </div>
-        </div>
+      // $('#plan').change(() => {
+      //     console.log($('#plan').is(':checked'))
+      // })
 
-        <!-- Upload Excel Modal -->
-        <div class="modal fade" id="uploadExcel">
-            <div class="modal-dialog">
-                <div class="modal-content">
+      var adduserform = $("#addnewuser");
 
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Add New Users</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
+      adduserform.on("submit", addusersubmitHandler);
 
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <form id="uploadexcel" class="mx-5">
-                            <div class="mb-3">
-                                <label>Select Excel:</label>
-                                <input id="excel" name="excel" type="file" class="form-control">
-                            </div>
-                            <button type="submit" class="btn btn-info mt-3 pull-right">Add</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+      function addusersubmitHandler(e) {
+        e.preventDefault();
+        var phonePattern = /^\d{10}$/;
+        var emailPattern =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-        <%- include ('partials/footer.ejs') %>
+        // vaidation
+        if ($("#name").val() == "") {
+          alert("Name is required");
+          return false;
+        } else if ($("#name").val().length > 50) {
+          alert("Name max length is 50 charactor");
+          return false;
+        } else if (!phonePattern.test($("#phone").val())) {
+          alert("Invalid phone number");
+          return false;
+        }
 
-        <script>
-            activeSideBar('users');
+        // plan vaidation
+        if (!isNumeric($("#months").val())) {
+          alert("Please enter valid months");
+          return false;
+        } else if (!isNumeric($("#amount").val())) {
+          alert("Please enter valid amount");
+          return false;
+        }
 
-            $(document).ready(function () {
-                $('#example').DataTable();
-            });
+        // data
+        var data = {
+          name: $("#name").val(),
+          phone: $("#phone").val(),
+          months: $("#months").val(),
+          amount: $("#amount").val(),
+          videos: $("#videos").is(":checked"),
+          notes: $("#notes").is(":checked"),
+          sociology_videos: $("#sociology_videos").is(":checked"),
+          sociology_notes: $("#sociology_notes").is(":checked"),
+        };
 
-            // $('#plan').change(() => {
-            //     console.log($('#plan').is(':checked'))
-            // })
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: window.location + "/addnewuser",
+          data: JSON.stringify(data),
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
 
-            var adduserform = $('#addnewuser');
+      var edituserform = $("#edituser");
 
-            adduserform.on('submit', addusersubmitHandler);
+      edituserform.on("submit", editusersubmitHandler);
 
-            function addusersubmitHandler(e) {
-                e.preventDefault()
-                var phonePattern = /^\d{10}$/;
-                var emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      function editusersubmitHandler(e) {
+        e.preventDefault();
 
-                // vaidation
-                if ($('#name').val() == '') {
-                    alert('Name is required');
-                    return false;
-                } else if ($('#name').val().length > 50) {
-                    alert('Name max length is 50 charactor');
-                    return false;
-                } else if (!phonePattern.test($('#phone').val())) {
-                    alert('Invalid phone number');
-                    return false;
-                }
+        var phonePattern = /^\d{10}$/;
+        var emailPattern =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-                // plan vaidation
-                if (!isNumeric($('#months').val())) {
-                    alert('Please enter valid months');
-                    return false;
-                } else if (!isNumeric($('#amount').val())) {
-                    alert('Please enter valid amount');
-                    return false;
-                }
+        // vaidation
+        if ($("#editname").val() == "") {
+          alert("Name is required");
+          return false;
+        } else if ($("#editname").val().length > 50) {
+          alert("Name max length is 50 charactor");
+          return false;
+        } else if (!phonePattern.test($("#editphone").val())) {
+          alert("Invalid phone number");
+          return false;
+        }
 
-                // data
-                var data = {
-                    name: $('#name').val(),
-                    phone: $('#phone').val(),
-                    months: $('#months').val(),
-                    amount: $('#amount').val(),
-                    videos: $('#videos').is(':checked'),
-                    notes: $('#notes').is(':checked'),
-                    sociology_videos: $('#sociology_videos').is(':checked'),
-                    sociology_notes: $('#sociology_notes').is(':checked'),
-                }
+        // plan edit validation
+        if (!isNumeric($("#editmonths").val())) {
+          alert("Please enter valid months");
+          return false;
+        } else if (!isNumeric($("#editamount").val())) {
+          alert("Please enter valid amount");
+          return false;
+        }
 
-                // DO POST
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json",
-                    url: window.location + "/addnewuser",
-                    data: JSON.stringify(data)
-                }).done(res => {
-                    if (res == 'success') {
-                        location.reload();
-                    } else {
-                        alert(res);
-                    }
-                });
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: window.location + "/edituser",
+          data: JSON.stringify({
+            id: $("#editid").val(),
+            name: $("#editname").val(),
+            phone: $("#editphone").val(),
+            user: $("#edituser").val(),
+            months: $("#editmonths").val(),
+            amount: $("#editamount").val(),
+            videos: $("#editvideos").is(":checked"),
+            notes: $("#editnotes").is(":checked"),
+            sociology_videos: $("#editsociologyvideos").is(":checked"),
+            sociology_notes: $("#editsociologynotes").is(":checked"),
+            plan: $("#plan").is(":checked"),
+          }),
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+
+      function editformupdate(
+        id,
+        name,
+        phone,
+        months,
+        amount,
+        videos,
+        notes,
+        sociology_videos,
+        sociology_notes
+      ) {
+        $("#editid").val(id);
+        $("#editname").val(name);
+        $("#editphone").val(phone);
+        $("#editmonths").val(months);
+        $("#editamount").val(amount);
+        videos == "true"
+          ? $("#editvideos").attr("checked", true)
+          : $("#editvideos").attr("checked", false);
+        notes == "true"
+          ? $("#editnotes").attr("checked", true)
+          : $("#editnotes").attr("checked", false);
+        sociology_videos == "true"
+          ? $("#editsociologyvideos").attr("checked", true)
+          : $("#editsociologyvideos").attr("checked", false);
+        sociology_notes == "true"
+          ? $("#editsociologynotes").attr("checked", true)
+          : $("#editsociologynotes").attr("checked", false);
+      }
+
+      function deleteuser(id) {
+        if (confirm("Do you really want to delete this Subscription")) {
+          // DO POST
+          $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: window.location + "/deleteuser",
+            data: JSON.stringify({
+              id: id,
+            }),
+          }).done((res) => {
+            if (res == "success") {
+              location.reload();
+            } else {
+              alert(res);
             }
+          });
+        }
+      }
 
-            var edituserform = $('#edituser');
-
-            edituserform.on('submit', editusersubmitHandler);
-
-            function editusersubmitHandler(e) {
-                e.preventDefault()
-
-                var phonePattern = /^\d{10}$/;
-                var emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-                // vaidation
-                if ($('#editname').val() == '') {
-                    alert('Name is required');
-                    return false;
-                } else if ($('#editname').val().length > 50) {
-                    alert('Name max length is 50 charactor');
-                    return false;
-                } else if (!phonePattern.test($('#editphone').val())) {
-                    alert('Invalid phone number');
-                    return false;
-                }
-
-                // plan edit validation
-                if (!isNumeric($('#editmonths').val())) {
-                    alert('Please enter valid months');
-                    return false;
-                } else if (!isNumeric($('#editamount').val())) {
-                    alert('Please enter valid amount');
-                    return false;
-                }
-
-                // DO POST
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json",
-                    url: window.location + "/edituser",
-                    data: JSON.stringify({
-                        id: $('#editid').val(),
-                        name: $('#editname').val(),
-                        phone: $('#editphone').val(),
-                        user: $('#edituser').val(),
-                        months: $('#editmonths').val(),
-                        amount: $('#editamount').val(),
-                        videos: $('#editvideos').is(':checked'),
-                        notes: $('#editnotes').is(':checked'),
-                        sociology_videos: $('#editsociologyvideos').is(':checked'),
-                        sociology_notes: $('#editsociologynotes').is(':checked'),
-                        plan: $('#plan').is(':checked'),
-                    })
-                }).done(res => {
-                    if (res == 'success') {
-                        location.reload();
-                    } else {
-                        alert(res);
-                    }
-                });
+      function deleteAllUsers() {
+        if (confirm("Do you really want to delete all users")) {
+          // DO POST
+          $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: window.location + "/deletealluser",
+          }).done((res) => {
+            if (res == "success") {
+              location.reload();
+            } else {
+              alert(res);
             }
+          });
+        }
+      }
 
-            function editformupdate(id, name, phone, months, amount, videos, notes, sociology_videos, sociology_notes) {
-                $('#editid').val(id);
-                $('#editname').val(name);
-                $('#editphone').val(phone);
-                $('#editmonths').val(months);
-                $('#editamount').val(amount);
-                videos == 'true' ? $('#editvideos').attr('checked', true) : $('#editvideos').attr('checked', false);
-                notes == 'true' ? $('#editnotes').attr('checked', true) : $('#editnotes').attr('checked', false);
-                sociology_videos == 'true' ? $('#editsociologyvideos').attr('checked', true) : $('#editsociologyvideos')
-                    .attr('checked', false);
-                sociology_notes == 'true' ? $('#editsociologynotes').attr('checked', true) : $('#editsociologynotes')
-                    .attr('checked', false);
-            }
+      function isNumeric(str) {
+        if (typeof str != "string") return false; // we only process strings!
+        return (
+          !isNaN(str) &&
+          // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+          !isNaN(parseFloat(str))
+        ); // ...and ensure strings of whitespace fail
+      }
 
-            function deleteuser(id) {
-                if (confirm('Do you really want to delete this Subscription')) {
-                    // DO POST
-                    $.ajax({
-                        type: "POST",
-                        contentType: "application/json",
-                        url: window.location + "/deleteuser",
-                        data: JSON.stringify({
-                            id: id
-                        })
-                    }).done(res => {
-                        if (res == 'success') {
-                            location.reload();
-                        } else {
-                            alert(res);
-                        }
-                    });
-                }
-            }
+      var uploadexcelform = $("#uploadexcel");
 
-            function deleteAllUsers() {
-                if (confirm('Do you really want to delete all users')) {
-                    // DO POST
-                    $.ajax({
-                        type: "POST",
-                        contentType: "application/json",
-                        url: window.location + "/deletealluser",
-                    }).done(res => {
-                        if (res == 'success') {
-                            location.reload();
-                        } else {
-                            alert(res);
-                        }
-                    });
-                }
-            }
+      uploadexcelform.on("submit", adduserssubmitHandler);
 
-            function isNumeric(str) {
-                if (typeof str != "string") return false // we only process strings!  
-                return !isNaN(str) &&
-                    // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-                    !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
-            }
+      function adduserssubmitHandler(e) {
+        e.preventDefault();
 
-            var uploadexcelform = $('#uploadexcel');
+        // vaidation
+        if ($("#excel").get(0).files.length === 0) {
+          alert("No files selected");
+          return false;
+        }
 
-            uploadexcelform.on('submit', adduserssubmitHandler);
+        // PREPARE FORM DATA
+        var formData = new FormData($("form")[2]);
 
-            function adduserssubmitHandler(e) {
-                e.preventDefault()
-
-                // vaidation
-                if ($('#excel').get(0).files.length === 0) {
-                    alert('No files selected');
-                    return false;
-                }
-
-                // PREPARE FORM DATA
-                var formData = new FormData($('form')[2]);
-
-                // DO POST
-                $.ajax({
-                    type: "POST",
-                    cache: false,
-                    enctype: "multipart/form-data",
-                    processData: false,
-                    contentType: false,
-                    url: window.location + "/importexcel",
-                    data: formData
-                }).done(res => {
-                    if (res == 'success') {
-                        location.reload();
-                    } else {
-                        alert(res);
-                    }
-                });
-            }
-        </script>
-        <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+        // DO POST
+        $.ajax({
+          type: "POST",
+          cache: false,
+          enctype: "multipart/form-data",
+          processData: false,
+          contentType: false,
+          url: window.location + "/importexcel",
+          data: formData,
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    importexcel
+  </div>
+</div>

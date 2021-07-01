@@ -1,4 +1,29 @@
 const sociologyTest = require("../../models/Sociologytest");
+const moment = require("moment");
+const path = require("path");
+const root = process.cwd();
+const reader = require("xlsx");
+const excelFilter = require("../../config/excelFilter");
+const multer = require("multer");
+const json2xls = require("json2xls");
+const fs = require("fs");
+
+// Set The Storage Engine
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, "/../../tmp"),
+  filename: function (req, files, cb) {
+    cb(null, `questions.xlsx`);
+  },
+});
+
+// Init Upload
+const upload = multer({
+  storage: storage,
+  // limits: {
+  //     fileSize: 5000000
+  // },
+  fileFilter: excelFilter,
+}).single("excel");
 
 module.exports = {
   addsociologyTest: async (req, res) => {
@@ -33,24 +58,62 @@ module.exports = {
     }
   },
   questionView: async (req, res) => {
-    const questions = await sociologyTest
+    const test = await sociologyTest
       .findOne({ _id: req.query.id }, { questions: 1 })
       .sort({
         _id: -1,
       });
-    return res.render("admin/sociologytestquestion.ejs", { questions });
+    return res.render("admin/sociologytestquestion.ejs", {
+      questions: test.questions,
+    });
+  },
+  importExcel: async (req, res) => {
+    req.setTimeout(0);
+    try {
+      upload(req, res, async function (err) {
+        if (req.fileValidationError) {
+          return res.send(req.fileValidationError);
+        } else if (!req.file) {
+          return res.send("Please upload an excel file");
+        } else if (err instanceof multer.MulterError) {
+          console.log(err);
+          return res.send(err);
+        } else if (err) {
+          console.log(err);
+          return res.send(err);
+        }
+
+        const file = reader.readFile(path.join(root, "tmp/questions.xlsx"));
+
+        const sheets = file.SheetNames;
+
+        for (let i = 0; i < sheets.length; i++) {
+          const questions = reader.utils.sheet_to_json(
+            file.Sheets[file.SheetNames[i]]
+          );
+          try {
+            const postResponse = await sociologyTest.findOneAndUpdate(
+              { _id: req.body.id },
+              { $addToSet: { questions: questions } }
+            );
+            return res.send("success");
+          } catch (error) {
+            console.log("error");
+          }
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      return res.send("Somthing went wrong please try again later");
+    }
   },
   addMoreQuestions: async (req, res) => {
     if (!req.body.id) return res.send("Please Pass sociology Test id");
-    if (!req.body.questions)
-      return res
-        .status(404)
-        .json({ success: 0, message: "No Questions Found!!" });
 
     // Checking test available in Document
     const testRecords = await sociologyTest
       .find({
-        name: req.body.name,
+        id: req.body.id,
       })
       .sort({
         created_at: -1,
@@ -58,10 +121,7 @@ module.exports = {
 
     // No Records Found with that test name
     if (testRecords == "" || testRecords == null)
-      return res.status(404).json({
-        success: 0,
-        message: "No sociology Test Records Found with that Test Name..",
-      });
+      return res.send("No sociology Test Records Found with that Test Id..");
 
     try {
       const postResponse = await sociologyTest.findOneAndUpdate(
@@ -70,15 +130,10 @@ module.exports = {
       );
 
       if (postResponse) {
-        return res.status(200).json({
-          success: 1,
-          message: "sociology Test Questions Added Successfully!!",
-        });
+        return res.send("sociology Test Questions Added Successfully!!");
       }
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: 0, message: "Something went Wrong!! Try Again.." });
+      return res.send("Something went Wrong!! Try Again..");
     }
   },
   updatesociologyTest: async (req, res) => {
@@ -202,8 +257,8 @@ module.exports = {
     try {
       var id = req.body.id;
 
-      const tests = await sociologyTest.findById(id);
-      if (tests) {
+      const test = await sociologyTest.findById(id);
+      if (test) {
         const deleteResponse = await sociologyTest.deleteOne({ _id: id });
         if (deleteResponse) {
           return res.send("success");
@@ -217,8 +272,8 @@ module.exports = {
   },
   deleteQuestionsociologyTest: async (req, res) => {
     try {
-      var testId = req.params.testid;
-      var quesId = req.params.quesid;
+      var testId = req.body.testid;
+      var quesId = req.body.quesid;
 
       const checkAvail = await sociologyTest.findOne(
         { _id: testId, "questions._id": quesId },
@@ -231,22 +286,13 @@ module.exports = {
           { $pull: { questions: { _id: quesId } } }
         );
         if (deleteResponse) {
-          return res.status(200).json({
-            success: 1,
-            message: "sociology Test Questions Deleted Successfully",
-          });
+          return res.send("success");
         }
       } else {
-        return res.status(500).json({
-          success: 0,
-          message: "sociology Test Questions Records not Found.!!",
-        });
+        return res.send("sociology Test Questions Records not Found.!!");
       }
     } catch (error) {
-      return res.json({
-        success: 0,
-        message: "Sorry!! Test deletion unsuccessful..",
-      });
+      return res.send("Sorry!! Test deletion unsuccessful..");
     }
   },
 };
