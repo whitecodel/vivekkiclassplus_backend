@@ -29,7 +29,7 @@ module.exports = {
   addsociologyTest: async (req, res) => {
     if (!req.body.name) return res.send("sociology Test Name is Required");
     if (!req.body.duration) return res.send("Duration is Required");
-    if (!req.body.category) return res.send | "Category ID is Required";
+    if (!req.body.category) return res.send("Category ID is Required");
     // if (!req.body.questions) return res.send("Question's is Required");
 
     try {
@@ -43,17 +43,15 @@ module.exports = {
           questions: req.body.questions ?? [],
           category: req.body.category,
         });
-
-        const postResponse = await postData.save();
-        if (postResponse) {
-          return res.send("success");
-        }
+        await postData.save();
+        return res.send("success");
       } else {
         return res.send(
           "sociology Test Name Already Exist. Please Add new Test Records!!"
         );
       }
     } catch (error) {
+      console.log(error);
       return res.send("Something went Wrong!! Try Again..");
     }
   },

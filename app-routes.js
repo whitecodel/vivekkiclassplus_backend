@@ -26,6 +26,9 @@ const activeplanR = require("./routes/app-routes/activeplan");
 const sliderR = require("./routes/app-routes/slider");
 const qstudentsR = require("./routes/app-routes/qstudent");
 const appcurrentaffairR = require("./routes/app-routes/currentaffair");
+const sociologytestcategoryR = require("./routes/app-routes/sociologytestcategory");
+const sociologytestsubcategoryR = require("./routes/app-routes/sociologytestsubcategory");
+// const sociologytestR = require("./routes/app-routes/sociologytest");
 
 // Admin routes
 const authR = require("./routes/backend-routes/auth");
@@ -80,6 +83,10 @@ const AppRoutes = (app) => {
   app.use("/sliders", sliderR);
   app.use("/qstudents", qstudentsR);
   app.use("/currentaffair", appcurrentaffairR);
+  // app test routes
+  app.use("/sociologytestcategory", sociologytestcategoryR);
+  app.use("/sociologytestsubcategory", sociologytestsubcategoryR);
+  // app.use("/sociologytest", sociologytestR);
 
   // admin routes
   app.use("/", testR);

@@ -79,26 +79,28 @@
           <td class="text-center"><%= plan.months %></td>
           <td class="text-center"><%= plan.amount %></td>
           <td class="text-center">
-            <%- plan.videos ? '<i class="material-icons bg-success text-white"
-              >done</i
-            >' : '<i class="material-icons bg-danger text-white">close</i>' %>
-          </td>
-          <td class="text-center">
-            <%- plan.notes ? '<i class="material-icons bg-success text-white"
-              >done</i
-            >' : '<i class="material-icons bg-danger text-white">close</i>' %>
-          </td>
-          <td class="text-center">
-            <%- plan.sociology_videos ? '<i
+            <% if(plan.videos) { `<i
               class="material-icons bg-success text-white"
               >done</i
-            >' : '<i class="material-icons bg-danger text-white">close</i>' %>
+            >` } else { `<i class="material-icons bg-danger text-white">close</i
+            >` }%>
           </td>
           <td class="text-center">
-            <%- plan.sociology_notes ? '<i
+            <% plan.notes ? `<i class="material-icons bg-success text-white"
+              >done</i
+            >` : `<i class="material-icons bg-danger text-white">close</i>` %>
+          </td>
+          <td class="text-center">
+            <% plan.sociology_videos ? `<i
               class="material-icons bg-success text-white"
               >done</i
-            >' : '<i class="material-icons bg-danger text-white">close</i>' %>
+            >` : `<i class="material-icons bg-danger text-white">close</i>` %>
+          </td>
+          <td class="text-center">
+            <% plan.sociology_notes ? `<i
+              class="material-icons bg-success text-white"
+              >done</i
+            >` : `<i class="material-icons bg-danger text-white">close</i>` %>
           </td>
           <td class="text-center"><%= plan.active_date %></td>
           <td class="text-center"><%= plan.expiry_date %></td>

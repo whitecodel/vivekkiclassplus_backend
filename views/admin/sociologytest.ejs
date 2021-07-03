@@ -168,7 +168,9 @@
         e.preventDefault();
 
         // PREPARE FORM DATA
-        var formData = JSON.stringify(getFormData(addtestform));
+        var tmpFormData = getFormData(addtestform);
+        tmpFormData.category = getUrlParameter("id");
+        var formData = JSON.stringify(tmpFormData);
 
         $.ajax({
           type: "POST",
