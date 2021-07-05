@@ -28,7 +28,7 @@ const qstudentsR = require("./routes/app-routes/qstudent");
 const appcurrentaffairR = require("./routes/app-routes/currentaffair");
 const sociologytestcategoryR = require("./routes/app-routes/sociologytestcategory");
 const sociologytestsubcategoryR = require("./routes/app-routes/sociologytestsubcategory");
-// const sociologytestR = require("./routes/app-routes/sociologytest");
+const sociologytestR = require("./routes/app-routes/sociologytest");
 
 // Admin routes
 const authR = require("./routes/backend-routes/auth");
@@ -86,7 +86,7 @@ const AppRoutes = (app) => {
   // app test routes
   app.use("/sociologytestcategory", sociologytestcategoryR);
   app.use("/sociologytestsubcategory", sociologytestsubcategoryR);
-  // app.use("/sociologytest", sociologytestR);
+  app.use("/sociologytests", sociologytestR);
 
   // admin routes
   app.use("/", testR);
