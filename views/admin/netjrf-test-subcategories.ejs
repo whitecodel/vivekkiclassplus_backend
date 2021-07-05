@@ -1,0 +1,269 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main">
+  <div class="d-flex head">
+    <h2 class="heading">Net Jrf-Test Sub Categories :-</h2>
+    <button
+      type="button"
+      class="btn btn-info ml-auto"
+      data-toggle="modal"
+      data-target="#addnewtestsubcategory"
+    >
+      Add New
+    </button>
+  </div>
+  <div class="content">
+    <table
+      id="example"
+      class="table table-striped table-bordered add-button"
+      style="width: 100%"
+    >
+      <thead>
+        <tr>
+          <th class="text-center">Name</th>
+          <th class="text-center">Last Update</th>
+          <th class="text-center">Created</th>
+          <th class="text-center">Tests</th>
+          <th class="text-center">Edit</th>
+          <th class="text-center">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(!subcategories[0]) { %>
+        <tr>
+          <td colspan="100%" class="text-center">No Test Sub Categories</td>
+        </tr>
+        <% } else {%> <% subcategories.forEach(function(subcategory){ %>
+        <tr>
+          <td class="text-center"><%= subcategory.name %></td>
+          <td class="text-center"><%= subcategory.last_update_time %></td>
+          <td class="text-center"><%= subcategory.created_at %></td>
+          <td class="text-center">
+            <a href="/admin/netjrftest?id=<%= subcategory._id %>"
+              ><i class="material-icons table-icon btn play-video-icon"
+                >play_circle_outline</i
+              ></a
+            >
+          </td>
+          <td class="text-center" style="width: 12px">
+            <i
+              class="material-icons table-icon btn edit-icon"
+              data-toggle="modal"
+              data-target="#edittestsubcategory"
+              onclick="editformupdate('<%= subcategory._id %>', '<%= subcategory.name %>');"
+              >edit</i
+            >
+          </td>
+
+          <td class="text-center" style="width: 12px">
+            <i
+              class="material-icons table-icon btn delete-icon"
+              onclick="deletetestsubcategory('<%= subcategory._id %>');"
+              >delete</i
+            >
+          </td>
+        </tr>
+        <% }); %> <% } %>
+      </tbody>
+      <tfoot></tfoot>
+    </table>
+  </div>
+  <div>
+    <!-- Add testsubcategory Modal -->
+    <div class="modal fade" id="addnewtestsubcategory">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add New Net Jrf Test Subcategory</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="addnewtestsubcategory" class="mx-5">
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  placeholder="subcategory"
+                />
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                Add
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit testsubcategory Modal -->
+    <div class="modal fade" id="edittestsubcategory">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Edit testsubcategory</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="edittestsubcategory" class="mx-5">
+              <input type="hidden" id="editid" name="editid" />
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editname"
+                  name="editname"
+                  placeholder="subcategory"
+                />
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                edit
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include ('partials/footer.ejs') %>
+
+    <script>
+      activeSideBar("netjrf-test-categories");
+      $("#home_expand1").text("expand_more");
+      $("#home_submenu1").show();
+
+      $(document).ready(function () {
+        $("#example").DataTable();
+      });
+
+      var addtestsubcategoryform = $("#addnewtestsubcategory");
+
+      addtestsubcategoryform.on("submit", addtestsubcategoriesubmitHandler);
+
+      function addtestsubcategoriesubmitHandler(e) {
+        e.preventDefault();
+        var phonePattern = /^\d{10}$/;
+        var emailPattern =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        // vaidation
+        if ($("#name").val() == "") {
+          alert("subcategory is required");
+          return false;
+        } else if ($("#name").val().length > 50) {
+          alert("subcategory max length is 50 charactor");
+          return false;
+        }
+
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "netjrfsubcategorytest" + "/add",
+          data: JSON.stringify({
+            name: $("#name").val(),
+            category: getUrlParameter("id"),
+          }),
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+
+      var edittestsubcategoryform = $("#edittestsubcategory");
+
+      edittestsubcategoryform.on("submit", edittestsubcategoriesubmitHandler);
+
+      function edittestsubcategoriesubmitHandler(e) {
+        e.preventDefault();
+
+        var phonePattern = /^\d{10}$/;
+        var emailPattern =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        // vaidation
+        if ($("#editname").val() == "") {
+          alert("subcategory is required");
+          return false;
+        } else if ($("#editname").val().length > 50) {
+          alert("subcategory max length is 50 charactor");
+          return false;
+        }
+
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "netjrfsubcategorytest" + "/update",
+          data: JSON.stringify({
+            id: $("#editid").val(),
+            name: $("#editname").val(),
+          }),
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+
+      function editformupdate(id, name, phone, email) {
+        $("#editid").val(id);
+        $("#editname").val(name);
+      }
+
+      function deletetestsubcategory(id) {
+        if (confirm("Do you really want to delete this subcategory")) {
+          // DO POST
+          $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "netjrfsubcategorytest" + "/delete",
+            data: JSON.stringify({
+              id: id,
+            }),
+          }).done((res) => {
+            if (res == "success") {
+              location.reload();
+            } else {
+              alert(res);
+            }
+          });
+        }
+      }
+
+      var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+          sURLVariables = sPageURL.split("&"),
+          sParameterName,
+          i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split("=");
+
+          if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined
+              ? true
+              : decodeURIComponent(sParameterName[1]);
+          }
+        }
+      };
+    </script>
+  </div>
+</div>

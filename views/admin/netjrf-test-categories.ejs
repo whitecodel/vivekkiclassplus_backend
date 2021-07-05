@@ -1,0 +1,274 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main">
+  <div class="d-flex head">
+    <h2 class="heading">Net Jrf Test Categories :-</h2>
+    <button
+      type="button"
+      class="btn btn-info ml-auto"
+      data-toggle="modal"
+      data-target="#addnewtestcategory"
+    >
+      Add New
+    </button>
+  </div>
+  <div class="content">
+    <table
+      id="example"
+      class="table table-striped table-bordered add-button"
+      style="width: 100%"
+    >
+      <thead>
+        <tr>
+          <th class="text-center">Name</th>
+          <th class="text-center">Last Update</th>
+          <th class="text-center">Created</th>
+          <th class="text-center">Action</th>
+          <th class="text-center">Edit</th>
+          <th class="text-center">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(!categories[0]) { %>
+        <tr>
+          <td colspan="100%" class="text-center">No Test Categories</td>
+        </tr>
+        <% } else {%> <% categories.forEach(function(category){ %>
+        <tr>
+          <td class="text-center"><%= category.name %></td>
+          <td class="text-center"><%= category.last_update_time %></td>
+          <td class="text-center"><%= category.created_at %></td>
+          <% if(category.subcategory){ %>
+          <td class="text-center">
+            <a href="/admin/netjrfsubcategorytest?id=<%= category._id %>"
+              ><i class="material-icons table-icon btn visibility-icon"
+                >visibility</i
+              ></a
+            >
+          </td>
+          <% }else {%>
+          <td class="text-center">
+            <a href="/admin/netjrftest?id=<%= category._id %>"
+              ><i class="material-icons table-icon btn play-test-icon"
+                >play_circle_outline</i
+              ></a
+            >
+          </td>
+          <% } %>
+          <td class="text-center" style="width: 12px">
+            <i
+              class="material-icons table-icon btn edit-icon"
+              data-toggle="modal"
+              data-target="#edittestcategory"
+              onclick="editformupdate('<%= category._id %>', '<%= category.name %>');"
+              >edit</i
+            >
+          </td>
+
+          <td class="text-center" style="width: 12px">
+            <i
+              class="material-icons table-icon btn delete-icon"
+              onclick="deletetestcategory('<%= category._id %>');"
+              >delete</i
+            >
+          </td>
+        </tr>
+        <% }); %> <% } %>
+      </tbody>
+      <tfoot></tfoot>
+    </table>
+  </div>
+  <div>
+    <!-- Add testcategory Modal -->
+    <div class="modal fade" id="addnewtestcategory">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add New netjrf Test Category</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="addnewtestcategory" class="mx-5">
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  placeholder="Category"
+                />
+              </div>
+              <div class="mb-3" style="display: flex">
+                <input
+                  type="checkbox"
+                  class="form-control"
+                  id="subcategory"
+                  name="subcategory"
+                  checked
+                />
+                <label style="margin-left: 10px; margin-top: 9px"
+                  >Sub Category</label
+                >
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                Add
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit testcategory Modal -->
+    <div class="modal fade" id="edittestcategory">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Edit testcategory</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="edittestcategory" class="mx-5">
+              <input type="hidden" id="editid" name="editid" />
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editname"
+                  name="editname"
+                  placeholder="Category"
+                />
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                edit
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include ('partials/footer.ejs') %>
+
+    <script>
+      activeSideBar("netjrf-test-categories");
+      $("#home_expand1").text("expand_more");
+      $("#home_submenu1").show();
+
+      $(document).ready(function () {
+        $("#example").DataTable();
+      });
+
+      var addtestcategoryform = $("#addnewtestcategory");
+
+      addtestcategoryform.on("submit", addtestcategoriesubmitHandler);
+
+      function addtestcategoriesubmitHandler(e) {
+        e.preventDefault();
+        var phonePattern = /^\d{10}$/;
+        var emailPattern =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        // vaidation
+        if ($("#name").val() == "") {
+          alert("Category is required");
+          return false;
+        } else if ($("#name").val().length > 50) {
+          alert("Category max length is 50 charactor");
+          return false;
+        }
+
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: window.location + "/add",
+          data: JSON.stringify({
+            name: $("#name").val(),
+            subcategory: $("#subcategory").is(":checked"),
+          }),
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+
+      var edittestcategoryform = $("#edittestcategory");
+
+      edittestcategoryform.on("submit", edittestcategoriesubmitHandler);
+
+      function edittestcategoriesubmitHandler(e) {
+        e.preventDefault();
+
+        var phonePattern = /^\d{10}$/;
+        var emailPattern =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        // vaidation
+        if ($("#editname").val() == "") {
+          alert("Category is required");
+          return false;
+        } else if ($("#editname").val().length > 50) {
+          alert("Category max length is 50 charactor");
+          return false;
+        }
+
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: window.location + "/update",
+          data: JSON.stringify({
+            id: $("#editid").val(),
+            name: $("#editname").val(),
+          }),
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+
+      function editformupdate(id, name) {
+        $("#editid").val(id);
+        $("#editname").val(name);
+      }
+
+      function deletetestcategory(id) {
+        if (confirm("Do you really want to delete this category")) {
+          // DO POST
+          $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: window.location + "/delete",
+            data: JSON.stringify({
+              id: id,
+            }),
+          }).done((res) => {
+            if (res == "success") {
+              location.reload();
+            } else {
+              alert(res);
+            }
+          });
+        }
+      }
+    </script>
+  </div>
+</div>
