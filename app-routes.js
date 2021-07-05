@@ -29,6 +29,9 @@ const appcurrentaffairR = require("./routes/app-routes/currentaffair");
 const sociologytestcategoryR = require("./routes/app-routes/sociologytestcategory");
 const sociologytestsubcategoryR = require("./routes/app-routes/sociologytestsubcategory");
 const sociologytestR = require("./routes/app-routes/sociologytest");
+const netjrftestcategoryR = require("./routes/app-routes/netjrftestcategory");
+const netjrftestsubcategoryR = require("./routes/app-routes/netjrftestsubcategory");
+const netjrftestR = require("./routes/app-routes/netjrftest");
 
 // Admin routes
 const authR = require("./routes/backend-routes/auth");
@@ -93,6 +96,9 @@ const AppRoutes = (app) => {
   app.use("/sociologytestcategory", sociologytestcategoryR);
   app.use("/sociologytestsubcategory", sociologytestsubcategoryR);
   app.use("/sociologytests", sociologytestR);
+  app.use("/netjrftestcategory", netjrftestcategoryR);
+  app.use("/netjrftestsubcategory", netjrftestsubcategoryR);
+  app.use("/netjrftests", netjrftestR);
 
   // admin routes
   app.use("/", testR);
