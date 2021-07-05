@@ -55,6 +55,9 @@ const admin_systeminfoR = require("./routes/backend-routes/systeminfo");
 const admin_sociologytestcategoryR = require("./routes/backend-routes/sociologytestcategory");
 const admin_sociologytestsubcategoryR = require("./routes/backend-routes/sociologytestsubcategory");
 const admin_sociologytestR = require("./routes/backend-routes/sociologytest");
+const admin_pptestcategoryR = require("./routes/backend-routes/pptestcategory");
+const admin_pptestsubcategoryR = require("./routes/backend-routes/pptestsubcategory");
+const admin_pptestR = require("./routes/backend-routes/pptest");
 
 // Upload routes
 const uploadR = require("./routes/backend-routes/upload");
@@ -116,6 +119,9 @@ const AppRoutes = (app) => {
   app.use("/admin", admin_sociologytestcategoryR);
   app.use("/admin", admin_sociologytestsubcategoryR);
   app.use("/admin", admin_sociologytestR);
+  app.use("/admin", admin_pptestcategoryR);
+  app.use("/admin", admin_pptestsubcategoryR);
+  app.use("/admin", admin_pptestR);
 };
 
 module.exports = AppRoutes;
