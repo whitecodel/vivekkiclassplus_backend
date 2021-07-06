@@ -1,0 +1,93 @@
+<%- include('partials/header.ejs') %>
+
+<style>
+    .img-thumbnail {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+
+<!-- content start -->
+<div class="main">
+    <div class="d-flex head">
+        <h2 class="heading">Pre PHD-Notes</h2>
+    </div>
+    <div class="content">
+        <form id="form">
+            <label>Note Title :</label>
+            <input type="text" name="title" id="title" class="form-control mb-3" placeholder="Note Title">
+            <label>Note :</label>
+            <div style="display: flex;">
+                <input type="file" id="pdf" name="pdf" class="form-control mb-3" style="width: 80%;">
+                <button class="btn btn-info ml-auto">upload</button>
+            </div>
+            <label>Thumbnail :</label>
+            <input type="file" id="thumbnail" name="thumbnail" class="form-control" style="width: 80%;">
+        </form>
+        <hr>
+    </div>
+</div>
+</form>
+
+<%- include ('partials/footer.ejs') %>
+
+<script>
+    activeSideBar('pp-note-categories');
+    $("#home_expand1").text('expand_more');
+    $('#home_submenu1').show();
+
+    var form = $('#form');
+
+    form.on('submit', submitHandler)
+
+    function submitHandler(e) {
+        e.preventDefault()
+        var title = $('#title').val();
+
+        // validation 
+        if (title == '') {
+            alert('Please enter title');
+            return false;
+        } else if (title.length > 50) {
+            alert('Title max lenth is 50 charactor');
+            return false;
+        }
+
+        // PREPARE FORM DATA
+        var formData = new FormData(form[0]);
+        formData.append('category', getUrlParameter('id'));
+
+        // DO POST
+        $.ajax({
+            type: "POST",
+            enctype: "multipart/form-data",
+            processData: false,
+            contentType: false,
+            url: "ppnotes/addnote",
+            data: formData
+        }).done(res => {
+            if (res == 'success') {
+                alert('Note uploaded successfully');
+                location.reload();
+            } else {
+                alert(res);
+            }
+        });
+    }
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+    };
+</script>

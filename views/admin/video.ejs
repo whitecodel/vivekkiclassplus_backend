@@ -40,9 +40,14 @@
 <%- include ('partials/footer.ejs') %>
 
 <script>
-    activeSideBar('video-categories');
-    $("#home_expand").text('expand_less');
-    $('#home_submenu').show();
+    activeSideBar("netjrf-li");
+      activeSideBar("video-categories");
+      var netjrf = $("#netjrf").find("#home_expand");
+      var submenu = $("#netjrf").find(".submenu");
+      netjrf.text("expand_less");
+      submenu.show();
+      $("#home_expand").text("expand_more");
+      $("#home_submenu").show();
     var bar = $('.bar');
     var progress_type = $('.progress_type');
 

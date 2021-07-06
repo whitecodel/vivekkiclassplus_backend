@@ -140,6 +140,11 @@ const AppRoutes = (app) => {
   app.use("/admin", admin_sociologyvideoR);
   app.use("/admin", sociologyvideosubcategoryR);
   app.use("/admin", sociologyvideocategoryR);
+  app.use("/admin", ppnotesubcategoryR);
+  app.use("/admin", ppnotecategoryR);
+  app.use("/admin", admin_ppvideoR);
+  app.use("/admin", ppvideosubcategoryR);
+  app.use("/admin", ppvideocategoryR);
   app.use("/admin", currentaffairR);
   app.use("/admin", admin_systeminfoR);
   // admin test routes

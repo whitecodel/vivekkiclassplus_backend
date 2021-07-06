@@ -1,0 +1,66 @@
+<%- include('partials/header.ejs') %>
+
+<style>
+    .img-thumbnail {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
+
+<!-- content start -->
+<div class="main">
+    <div class="d-flex head">
+        <h2 class="heading">Pre PHD Notes</h2>
+        <a href="pp-notes-add?id=<%= category %>" class="ml-auto"><button type="button" class="btn btn-info">Add
+            Notes</button></a>
+    </div>
+    <div class="content">
+        <div class="row text-center text-lg-left mt-3">
+            <% if(!ppnotes[0]) { %>
+            <div class="col-12 text-center">
+                <h2>No Notes</h2>
+            </div>
+            <% } else { %>
+            <% ppnotes.forEach(function(ppnote){ %>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="d-block mb-4 h-100" style="position: relative;">
+                    <img class="img-fluid img-thumbnail" src="../dist/thumbnail/pp/<%= ppnote.thumbnail %>" alt="">
+                    <button class="btn btn-danger" style="width: 100%;"
+                        onclick="deletenote('<%= ppnote._id %>')">Delete</button>
+                </div>
+            </div>
+            <% }) %>
+            <% } %>
+        </div>
+    </div>
+</div>
+</form>
+
+<%- include ('partials/footer.ejs') %>
+
+<script>
+    activeSideBar('pp-note-categories');
+    $("#home_expand1").text('expand_more');
+    $('#home_submenu1').show();
+
+    function deletenote(id) {
+        if (confirm('Do you really want to delete this note')) {
+            // DO POST
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "sociolgynotes/deletenote",
+                data: JSON.stringify({
+                    id: id
+                })
+            }).done(res => {
+                if (res == 'success') {
+                    location.reload();
+                } else {
+                    alert(res);
+                }
+            });
+        }
+    }
+</script>

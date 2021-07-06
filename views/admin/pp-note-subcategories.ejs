@@ -1,0 +1,270 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main">
+  <div class="d-flex head">
+    <h2 class="heading">Pre PHD-Note Sub Categories :-</h2>
+    <button
+      type="button"
+      class="btn btn-info ml-auto"
+      data-toggle="modal"
+      data-target="#addnewnotesubcategory"
+    >
+      Add New
+    </button>
+  </div>
+  <div class="content">
+    <table
+      id="example"
+      class="table table-striped table-bordered add-button"
+      style="width: 100%"
+    >
+      <thead>
+        <tr>
+          <th class="text-center">Name</th>
+          <th class="text-center">Last Update</th>
+          <th class="text-center">Created</th>
+          <th class="text-center">Notes</th>
+          <th class="text-center">Edit</th>
+          <th class="text-center">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(!ppnotesubcategories[0]) { %>
+        <tr>
+          <td colspan="100%" class="text-center">No Note Sub Categories</td>
+        </tr>
+        <% } else {%> <%
+        ppnotesubcategories.forEach(function(ppnotesubcategory){ %>
+        <tr>
+          <td class="text-center"><%= ppnotesubcategory.name %></td>
+          <td class="text-center"><%= ppnotesubcategory.last_update_time %></td>
+          <td class="text-center"><%= ppnotesubcategory.created_at %></td>
+          <td class="text-center">
+            <a href="/admin/ppnotes?id=<%= ppnotesubcategory._id %>"
+              ><i class="material-icons table-icon btn play-video-icon"
+                >picture_as_pdf</i
+              ></a
+            >
+          </td>
+          <td class="text-center" style="width: 12px">
+            <i
+              class="material-icons table-icon btn edit-icon"
+              data-toggle="modal"
+              data-target="#editnotesubcategory"
+              onclick="editformupdate('<%= ppnotesubcategory._id %>', '<%= ppnotesubcategory.name %>', '<%= ppnotesubcategory.phone %>', '<%= ppnotesubcategory.email %>');"
+              >edit</i
+            >
+          </td>
+
+          <td class="text-center" style="width: 12px">
+            <i
+              class="material-icons table-icon btn delete-icon"
+              onclick="deletenotesubcategory('<%= ppnotesubcategory._id %>');"
+              >delete</i
+            >
+          </td>
+        </tr>
+        <% }); %> <% } %>
+      </tbody>
+      <tfoot></tfoot>
+    </table>
+  </div>
+  <div>
+    <!-- Add notesubcategory Modal -->
+    <div class="modal fade" id="addnewnotesubcategory">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add New Notesubcategory</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="addnewnotesubcategory" class="mx-5">
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  placeholder="subcategory"
+                />
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                Add
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit notesubcategory Modal -->
+    <div class="modal fade" id="editnotesubcategory">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Edit notesubcategory</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="editnotesubcategory" class="mx-5">
+              <input type="hidden" id="editid" name="editid" />
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editname"
+                  name="editname"
+                  placeholder="subcategory"
+                />
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                edit
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include ('partials/footer.ejs') %>
+
+    <script>
+      activeSideBar("pp-note-categories");
+      $("#home_expand1").text("expand_more");
+      $("#home_submenu1").show();
+
+      $(document).ready(function () {
+        $("#example").DataTable();
+      });
+
+      var addnotesubcategoryform = $("#addnewnotesubcategory");
+
+      addnotesubcategoryform.on("submit", addnotesubcategoriesubmitHandler);
+
+      function addnotesubcategoriesubmitHandler(e) {
+        e.preventDefault();
+        var phonePattern = /^\d{10}$/;
+        var emailPattern =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        // vaidation
+        if ($("#name").val() == "") {
+          alert("subcategory is required");
+          return false;
+        } else if ($("#name").val().length > 50) {
+          alert("subcategory max length is 50 charactor");
+          return false;
+        }
+
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "/admin/pp-note-subcategories" + "/addnewnotesubcategory",
+          data: JSON.stringify({
+            name: $("#name").val(),
+            category: getUrlParameter("id"),
+          }),
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+
+      var editnotesubcategoryform = $("#editnotesubcategory");
+
+      editnotesubcategoryform.on("submit", editnotesubcategoriesubmitHandler);
+
+      function editnotesubcategoriesubmitHandler(e) {
+        e.preventDefault();
+
+        var phonePattern = /^\d{10}$/;
+        var emailPattern =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        // vaidation
+        if ($("#editname").val() == "") {
+          alert("subcategory is required");
+          return false;
+        } else if ($("#editname").val().length > 50) {
+          alert("subcategory max length is 50 charactor");
+          return false;
+        }
+
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "/admin/pp-note-subcategories" + "/editnotesubcategory",
+          data: JSON.stringify({
+            id: $("#editid").val(),
+            name: $("#editname").val(),
+          }),
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+
+      function editformupdate(id, name, phone, email) {
+        $("#editid").val(id);
+        $("#editname").val(name);
+      }
+
+      function deletenotesubcategory(id) {
+        if (confirm("Do you really want to delete this subcategory")) {
+          // DO POST
+          $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/admin/pp-note-subcategories" + "/deletenotesubcategory",
+            data: JSON.stringify({
+              id: id,
+            }),
+          }).done((res) => {
+            if (res == "success") {
+              location.reload();
+            } else {
+              alert(res);
+            }
+          });
+        }
+      }
+
+      var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+          sURLVariables = sPageURL.split("&"),
+          sParameterName,
+          i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split("=");
+
+          if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined
+              ? true
+              : decodeURIComponent(sParameterName[1]);
+          }
+        }
+      };
+    </script>
+  </div>
+</div>

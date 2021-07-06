@@ -2,223 +2,274 @@
 
 <!-- content start -->
 <div class="main">
-    <div class="d-flex head">
-        <h2 class="heading">Video Sub Categories :-</h2>
-        <button type="button" class="btn btn-info ml-auto" data-toggle="modal" data-target="#addnewvideosubcategory">Add
-            New</button>
-    </div>
-    <div class="content">
-        <table id="example" class="table table-striped table-bordered add-button" style="width:100%">
-            <thead>
-                <tr>
-                    <th class="text-center">Name</th>
-                    <th class="text-center">Last Update</th>
-                    <th class="text-center">Created</th>
-                    <th class="text-center">Videos</th>
-                    <th class="text-center">Edit</th>
-                    <th class="text-center">Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if(!videosubcategories[0]) { %>
-                <tr>
-                    <td colspan="100%" class="text-center">No Video Sub Categories</td>
-                </tr>
-                <% } else {%>
-                <% videosubcategories.forEach(function(videosubcategory){ %>
-                <tr>
-                    <td class="text-center"><%= videosubcategory.name %> </td>
-                    <td class="text-center"><%= videosubcategory.last_update_time %> </td>
-                    <td class="text-center"><%= videosubcategory.created_at %> </td>
-                    <td class="text-center"><a href="/admin/videos?id=<%= videosubcategory._id %>"><i class="material-icons table-icon btn play-video-icon">play_circle_outline</i></a></td>
-                    <td class="text-center" style="width: 12px;"><i class="material-icons table-icon btn edit-icon"
-                            data-toggle="modal" data-target="#editvideosubcategory"
-                            onclick="editformupdate('<%= videosubcategory._id %>', '<%= videosubcategory.name %>', '<%= videosubcategory.phone %>', '<%= videosubcategory.email %>');">edit</i>
-                    <td class=" text-center" style="width: 12px;"><i class="material-icons table-icon btn delete-icon"
-                            onclick="deletevideosubcategory('<%= videosubcategory._id %>');">delete</i>
-                    </td>
-                </tr>
-                <% }); %>
-                <% } %>
-            </tbody>
-            <tfoot>
-            </tfoot>
-        </table>
-    </div>
-    <div>
+  <div class="d-flex head">
+    <h2 class="heading">Video Sub Categories :-</h2>
+    <button
+      type="button"
+      class="btn btn-info ml-auto"
+      data-toggle="modal"
+      data-target="#addnewvideosubcategory"
+    >
+      Add New
+    </button>
+  </div>
+  <div class="content">
+    <table
+      id="example"
+      class="table table-striped table-bordered add-button"
+      style="width: 100%"
+    >
+      <thead>
+        <tr>
+          <th class="text-center">Name</th>
+          <th class="text-center">Last Update</th>
+          <th class="text-center">Created</th>
+          <th class="text-center">Videos</th>
+          <th class="text-center">Edit</th>
+          <th class="text-center">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(!videosubcategories[0]) { %>
+        <tr>
+          <td colspan="100%" class="text-center">No Video Sub Categories</td>
+        </tr>
+        <% } else {%> <% videosubcategories.forEach(function(videosubcategory){
+        %>
+        <tr>
+          <td class="text-center"><%= videosubcategory.name %></td>
+          <td class="text-center"><%= videosubcategory.last_update_time %></td>
+          <td class="text-center"><%= videosubcategory.created_at %></td>
+          <td class="text-center">
+            <a href="/admin/videos?id=<%= videosubcategory._id %>"
+              ><i class="material-icons table-icon btn play-video-icon"
+                >play_circle_outline</i
+              ></a
+            >
+          </td>
+          <td class="text-center" style="width: 12px">
+            <i
+              class="material-icons table-icon btn edit-icon"
+              data-toggle="modal"
+              data-target="#editvideosubcategory"
+              onclick="editformupdate('<%= videosubcategory._id %>', '<%= videosubcategory.name %>', '<%= videosubcategory.phone %>', '<%= videosubcategory.email %>');"
+              >edit</i
+            >
+          </td>
 
-        <!-- Add videosubcategory Modal -->
-        <div class="modal fade" id="addnewvideosubcategory">
-            <div class="modal-dialog">
-                <div class="modal-content">
+          <td class="text-center" style="width: 12px">
+            <i
+              class="material-icons table-icon btn delete-icon"
+              onclick="deletevideosubcategory('<%= videosubcategory._id %>');"
+              >delete</i
+            >
+          </td>
+        </tr>
+        <% }); %> <% } %>
+      </tbody>
+      <tfoot></tfoot>
+    </table>
+  </div>
+  <div>
+    <!-- Add videosubcategory Modal -->
+    <div class="modal fade" id="addnewvideosubcategory">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Add New videosubcategory</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
 
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Add New videosubcategory</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <form id="addnewvideosubcategory" class="mx-5">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="subcategory">
-                            </div>
-                            <button type="submit" class="btn btn-info mt-3 pull-right">Add</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="addnewvideosubcategory" class="mx-5">
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  placeholder="subcategory"
+                />
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                Add
+              </button>
+            </form>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Edit videosubcategory Modal -->
-        <div class="modal fade" id="editvideosubcategory">
-            <div class="modal-dialog">
-                <div class="modal-content">
+    <!-- Edit videosubcategory Modal -->
+    <div class="modal fade" id="editvideosubcategory">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Edit videosubcategory</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
 
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Edit videosubcategory</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <form id="editvideosubcategory" class="mx-5">
-                            <input type="hidden" id="editid" name="editid">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="editname" name="editname"
-                                    placeholder="subcategory">
-                            </div>
-                            <button type="submit" class="btn btn-info mt-3 pull-right">edit</button>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="editvideosubcategory" class="mx-5">
+              <input type="hidden" id="editid" name="editid" />
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editname"
+                  name="editname"
+                  placeholder="subcategory"
+                />
+              </div>
+              <button type="submit" class="btn btn-info mt-3 pull-right">
+                edit
+              </button>
+            </form>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <%- include ('partials/footer.ejs') %>
+    <%- include ('partials/footer.ejs') %>
 
-        <script>
-            activeSideBar('video-categories');
-            $("#home_expand").text('expand_more')
-            $('#home_submenu').show();
+    <script>
+      activeSideBar("netjrf-li");
+      activeSideBar("video-categories");
+      var netjrf = $("#netjrf").find("#home_expand");
+      var submenu = $("#netjrf").find(".submenu");
+      netjrf.text("expand_less");
+      submenu.show();
+      $("#home_expand").text("expand_more");
+      $("#home_submenu").show();
 
-            $(document).ready(function () {
-                $('#example').DataTable();
-            });
+      $(document).ready(function () {
+        $("#example").DataTable();
+      });
 
-            var addvideosubcategoryform = $('#addnewvideosubcategory');
+      var addvideosubcategoryform = $("#addnewvideosubcategory");
 
-            addvideosubcategoryform.on('submit', addvideosubcategoriesubmitHandler);
+      addvideosubcategoryform.on("submit", addvideosubcategoriesubmitHandler);
 
-            function addvideosubcategoriesubmitHandler(e) {
-                e.preventDefault()
-                var phonePattern = /^\d{10}$/;
-                var emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      function addvideosubcategoriesubmitHandler(e) {
+        e.preventDefault();
+        var phonePattern = /^\d{10}$/;
+        var emailPattern =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-                // vaidation
-                if ($('#name').val() == '') {
-                    alert('subcategory is required');
-                    return false;
-                } else if ($('#name').val().length > 50) {
-                    alert('subcategory max length is 50 charactor');
-                    return false;
-                }
+        // vaidation
+        if ($("#name").val() == "") {
+          alert("subcategory is required");
+          return false;
+        } else if ($("#name").val().length > 50) {
+          alert("subcategory max length is 50 charactor");
+          return false;
+        }
 
-                // DO POST
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json",
-                    url: "/admin/video-subcategories" + "/addnewvideosubcategory",
-                    data: JSON.stringify({
-                        name: $('#name').val(),
-                        category: getUrlParameter('id')
-                    })
-                }).done(res => {
-                    if (res == 'success') {
-                        location.reload();
-                    } else {
-                        alert(res);
-                    }
-                });
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "/admin/video-subcategories" + "/addnewvideosubcategory",
+          data: JSON.stringify({
+            name: $("#name").val(),
+            category: getUrlParameter("id"),
+          }),
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+
+      var editvideosubcategoryform = $("#editvideosubcategory");
+
+      editvideosubcategoryform.on("submit", editvideosubcategoriesubmitHandler);
+
+      function editvideosubcategoriesubmitHandler(e) {
+        e.preventDefault();
+
+        var phonePattern = /^\d{10}$/;
+        var emailPattern =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        // vaidation
+        if ($("#editname").val() == "") {
+          alert("subcategory is required");
+          return false;
+        } else if ($("#editname").val().length > 50) {
+          alert("subcategory max length is 50 charactor");
+          return false;
+        }
+
+        // DO POST
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "/admin/video-subcategories" + "/editvideosubcategory",
+          data: JSON.stringify({
+            id: $("#editid").val(),
+            name: $("#editname").val(),
+          }),
+        }).done((res) => {
+          if (res == "success") {
+            location.reload();
+          } else {
+            alert(res);
+          }
+        });
+      }
+
+      function editformupdate(id, name, phone, email) {
+        $("#editid").val(id);
+        $("#editname").val(name);
+      }
+
+      function deletevideosubcategory(id) {
+        if (confirm("Do you really want to delete this subcategory")) {
+          // DO POST
+          $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/admin/video-subcategories" + "/deletevideosubcategory",
+            data: JSON.stringify({
+              id: id,
+            }),
+          }).done((res) => {
+            if (res == "success") {
+              location.reload();
+            } else {
+              alert(res);
             }
+          });
+        }
+      }
 
-            var editvideosubcategoryform = $('#editvideosubcategory');
+      var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+          sURLVariables = sPageURL.split("&"),
+          sParameterName,
+          i;
 
-            editvideosubcategoryform.on('submit', editvideosubcategoriesubmitHandler);
+        for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split("=");
 
-            function editvideosubcategoriesubmitHandler(e) {
-                e.preventDefault()
-
-                var phonePattern = /^\d{10}$/;
-                var emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-                // vaidation
-                if ($('#editname').val() == '') {
-                    alert('subcategory is required');
-                    return false;
-                } else if ($('#editname').val().length > 50) {
-                    alert('subcategory max length is 50 charactor');
-                    return false;
-                }
-
-                // DO POST
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json",
-                    url: "/admin/video-subcategories" + "/editvideosubcategory",
-                    data: JSON.stringify({
-                        id: $('#editid').val(),
-                        name: $('#editname').val(),
-                    })
-                }).done(res => {
-                    if (res == 'success') {
-                        location.reload();
-                    } else {
-                        alert(res);
-                    }
-                });
-            }
-
-            function editformupdate(id, name, phone, email) {
-                $('#editid').val(id);
-                $('#editname').val(name);
-            }
-
-            function deletevideosubcategory(id) {
-                if (confirm('Do you really want to delete this subcategory')) {
-                    // DO POST
-                    $.ajax({
-                        type: "POST",
-                        contentType: "application/json",
-                        url: "/admin/video-subcategories" + "/deletevideosubcategory",
-                        data: JSON.stringify({
-                            id: id
-                        })
-                    }).done(res => {
-                        if (res == 'success') {
-                            location.reload();
-                        } else {
-                            alert(res);
-                        }
-                    });
-                }
-            }
-
-            var getUrlParameter = function getUrlParameter(sParam) {
-                var sPageURL = window.location.search.substring(1),
-                    sURLVariables = sPageURL.split('&'),
-                    sParameterName,
-                    i;
-
-                for (i = 0; i < sURLVariables.length; i++) {
-                    sParameterName = sURLVariables[i].split('=');
-
-                    if (sParameterName[0] === sParam) {
-                        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-                    }
-                }
-            };
-        </script>
+          if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined
+              ? true
+              : decodeURIComponent(sParameterName[1]);
+          }
+        }
+      };
+    </script>
+  </div>
+</div>
