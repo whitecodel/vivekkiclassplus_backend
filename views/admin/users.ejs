@@ -58,8 +58,13 @@
           <th class="text-center">Amount</th>
           <th class="text-center">Videos</th>
           <th class="text-center">Notes</th>
+          <th class="text-center">Tests</th>
           <th class="text-center">Sociology Videos</th>
           <th class="text-center">Sociology Notes</th>
+          <th class="text-center">Sociology Tests</th>
+          <th class="text-center">Pre PHD Videos</th>
+          <th class="text-center">Pre PHD Notes</th>
+          <th class="text-center">Pre PHD Tests</th>
           <th class="text-center">Active Date</th>
           <th class="text-center">Expiry Date</th>
           <th class="text-center">Update Time</th>
@@ -91,6 +96,11 @@
             >` : `<i class="material-icons bg-danger text-white">close</i>` %>
           </td>
           <td class="text-center">
+            <% plan.tests ? `<i class="material-icons bg-success text-white"
+              >done</i
+            >` : `<i class="material-icons bg-danger text-white">close</i>` %>
+          </td>
+          <td class="text-center">
             <% plan.sociology_videos ? `<i
               class="material-icons bg-success text-white"
               >done</i
@@ -99,6 +109,27 @@
           <td class="text-center">
             <% plan.sociology_notes ? `<i
               class="material-icons bg-success text-white"
+              >done</i
+            >` : `<i class="material-icons bg-danger text-white">close</i>` %>
+          </td>
+          <td class="text-center">
+            <% plan.sociology_tests ? `<i
+              class="material-icons bg-success text-white"
+              >done</i
+            >` : `<i class="material-icons bg-danger text-white">close</i>` %>
+          </td>
+          <td class="text-center">
+            <% plan.pp_videos ? `<i class="material-icons bg-success text-white"
+              >done</i
+            >` : `<i class="material-icons bg-danger text-white">close</i>` %>
+          </td>
+          <td class="text-center">
+            <% plan.pp_notes ? `<i class="material-icons bg-success text-white"
+              >done</i
+            >` : `<i class="material-icons bg-danger text-white">close</i>` %>
+          </td>
+          <td class="text-center">
+            <% plan.pp_tests ? `<i class="material-icons bg-success text-white"
               >done</i
             >` : `<i class="material-icons bg-danger text-white">close</i>` %>
           </td>
@@ -181,6 +212,7 @@
                     placeholder="Amount (RS.)"
                   />
                 </div>
+                <label>NET/JRF</label>
                 <div class="mb-3" style="display: flex">
                   <div style="display: flex">
                     <input
@@ -191,7 +223,7 @@
                       checked
                     />
                     <label style="margin-left: 10px; margin-top: 9px"
-                      >Net Videos</label
+                      >Videos</label
                     >
                   </div>
                   <div style="display: flex; margin-left: 20px">
@@ -203,10 +235,23 @@
                       checked
                     />
                     <label style="margin-left: 10px; margin-top: 9px"
-                      >Net Notes</label
+                      >Notes</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="tests"
+                      name="tests"
+                      checked
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Tests</label
                     >
                   </div>
                 </div>
+                <label>Sociology</label>
                 <div class="mb-3" style="display: flex">
                   <div style="display: flex">
                     <input
@@ -217,7 +262,7 @@
                       checked
                     />
                     <label style="margin-left: 10px; margin-top: 9px"
-                      >sociology Videos</label
+                      >Videos</label
                     >
                   </div>
                   <div style="display: flex; margin-left: 20px">
@@ -229,7 +274,58 @@
                       checked
                     />
                     <label style="margin-left: 10px; margin-top: 9px"
-                      >sociology Notes</label
+                      >Notes</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="sociology_tests"
+                      name="sociology_tests"
+                      checked
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Tests</label
+                    >
+                  </div>
+                </div>
+                <label>Pre PHD</label>
+                <div class="mb-3" style="display: flex">
+                  <div style="display: flex">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="pp_videos"
+                      name="pp_videos"
+                      checked
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Videos</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="pp_notes"
+                      name="pp_notes"
+                      checked
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Notes</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="pp_tests"
+                      name="pp_tests"
+                      checked
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Tests</label
                     >
                   </div>
                 </div>
@@ -310,6 +406,7 @@
                     placeholder="Amount (RS.)"
                   />
                 </div>
+                <label>NET/JRF</label>
                 <div class="mb-3" style="display: flex">
                   <div style="display: flex">
                     <input
@@ -319,7 +416,7 @@
                       name="editvideos"
                     />
                     <label style="margin-left: 10px; margin-top: 9px"
-                      >Net Videos</label
+                      >Videos</label
                     >
                   </div>
                   <div style="display: flex; margin-left: 20px">
@@ -330,10 +427,22 @@
                       name="editnotes"
                     />
                     <label style="margin-left: 10px; margin-top: 9px"
-                      >Net Notes</label
+                      >Notes</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="edittests"
+                      name="edittests"
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Tests</label
                     >
                   </div>
                 </div>
+                <label>Sociology</label>
                 <div class="mb-3" style="display: flex">
                   <div style="display: flex">
                     <input
@@ -343,7 +452,7 @@
                       name="editsociologyvideos"
                     />
                     <label style="margin-left: 10px; margin-top: 9px"
-                      >sociology Videos</label
+                      >Videos</label
                     >
                   </div>
                   <div style="display: flex; margin-left: 20px">
@@ -354,7 +463,54 @@
                       name="editsociologynotes"
                     />
                     <label style="margin-left: 10px; margin-top: 9px"
-                      >sociology Notes</label
+                      >Notes</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="editsociologytests"
+                      name="editsociologytests"
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Tests</label
+                    >
+                  </div>
+                </div>
+                <label>Pre PHD</label>
+                <div class="mb-3" style="display: flex">
+                  <div style="display: flex">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="editppvideos"
+                      name="editppvideos"
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Videos</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="editppnotes"
+                      name="editppnotes"
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Notes</label
+                    >
+                  </div>
+                  <div style="display: flex; margin-left: 20px">
+                    <input
+                      type="checkbox"
+                      class="form-control"
+                      id="editpptests"
+                      name="editpptests"
+                    />
+                    <label style="margin-left: 10px; margin-top: 9px"
+                      >Tests</label
                     >
                   </div>
                 </div>
