@@ -62,8 +62,13 @@ router.post("/users/addnewuser", NotLoggedIn, async (req, res) => {
       amount: req.body.amount,
       videos: req.body.videos,
       notes: req.body.notes,
+      tests: req.body.tests,
       sociology_videos: req.body.sociology_videos,
       sociology_notes: req.body.sociology_notes,
+      sociology_tests: req.body.sociology_tests,
+      tests_videos: req.body.tests_videos,
+      tests_notes: req.body.tests_notes,
+      tests_tests: req.body.tests_tests,
     });
     await plan.save();
     return res.send("success");
@@ -99,8 +104,13 @@ router.post("/users/edituser", NotLoggedIn, async (req, res) => {
         amount: req.body.amount,
         videos: req.body.videos,
         notes: req.body.notes,
+        tests: req.body.tests,
         sociology_videos: req.body.sociology_videos,
         sociology_notes: req.body.sociology_notes,
+        sociology_tests: req.body.sociology_tests,
+        pp_videos: req.body.pp_videos,
+        pp_notes: req.body.pp_notes,
+        pp_tests: req.body.pp_tests,
         last_update_time: Date.now(),
       };
     } else {
@@ -109,8 +119,13 @@ router.post("/users/edituser", NotLoggedIn, async (req, res) => {
         amount: req.body.amount,
         videos: req.body.videos,
         notes: req.body.notes,
+        tests: req.body.tests,
         sociology_videos: req.body.sociology_videos,
         sociology_notes: req.body.sociology_notes,
+        sociology_tests: req.body.sociology_tests,
+        pp_videos: req.body.pp_videos,
+        pp_notes: req.body.pp_notes,
+        pp_tests: req.body.pp_tests,
         active_date: Date.now(),
         last_update_time: Date.now(),
       };
@@ -180,7 +195,6 @@ router.post("/users/importexcel", NotLoggedIn, async (req, res) => {
         console.log(err);
         return res.send(err);
       }
-
       const file = reader.readFile(path.join(root, "tmp/users.xlsx"));
 
       const sheets = file.SheetNames;
@@ -208,6 +222,8 @@ router.post("/users/importexcel", NotLoggedIn, async (req, res) => {
                   item.Videos == "Yes" || item.Videos == "yes" ? true : false,
                 notes:
                   item.Notes == "Yes" || item.Notes == "yes" ? true : false,
+                tests:
+                  item.Tests == "Yes" || item.Tests == "yes" ? true : false,
                 sociology_videos:
                   item["Sociology Videos"] == "Yes" ||
                   item["Sociology Videos"] == "yes"
@@ -216,6 +232,23 @@ router.post("/users/importexcel", NotLoggedIn, async (req, res) => {
                 sociology_notes:
                   item["Sociology Notes"] == "Yes" ||
                   item["Sociology Notes"] == "yes"
+                    ? true
+                    : false,
+                sociology_tests:
+                  item["Sociology Tests"] == "Yes" ||
+                  item["Sociology Tests"] == "yes"
+                    ? true
+                    : false,
+                pp_videos:
+                  item["Pp Videos"] == "Yes" || item["Pp Videos"] == "yes"
+                    ? true
+                    : false,
+                pp_notes:
+                  item["Pp Notes"] == "Yes" || item["Pp Notes"] == "yes"
+                    ? true
+                    : false,
+                pp_tests:
+                  item["Pp Tests"] == "Yes" || item["Pp Tests"] == "yes"
                     ? true
                     : false,
               });
@@ -290,8 +323,13 @@ const addPlan = (data) => {
           Amount: plan.amount,
           Videos: plan.videos ? "yes" : "no",
           Notes: plan.notes ? "yes" : "no",
+          Tests: plan.tests ? "yes" : "no",
           "Sociology Videos": plan.sociology_videos ? "yes" : "no",
           "Sociology Notes": plan.sociology_notes ? "yes" : "no",
+          "Sociology Tests": plan.sociology_tests ? "yes" : "no",
+          "Pp Videos": plan.pp_videos ? "yes" : "no",
+          "Pp Notes": plan.pp_notes ? "yes" : "no",
+          "Pp Tests": plan.pp_tests ? "yes" : "no",
           "Plan Expiry Date": moment(parseInt(plan.active_date))
             .add(plan.months, "M")
             .format("DD MMM YYYY"),

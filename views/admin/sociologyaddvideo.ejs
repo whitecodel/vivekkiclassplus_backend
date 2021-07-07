@@ -32,10 +32,14 @@
     <%- include ('partials/footer.ejs') %>
 
     <script>
-        activeSideBar('sociologyvideos');
-        $("#home_expand").text('expand_less');
-        $('#home_submenu').show();
-
+        activeSideBar("sociology-li");
+        activeSideBar("sociology-video-categories");
+        var sociology = $("#sociology").find("#home_expand");
+        var submenu = $("#sociology").find(".submenu");
+        sociology.text("expand_less");
+        submenu.show();
+        $("#home_expand").text("expand_more");
+        $("#home_submenu").show();
         // set image
         $('#id').keyup(() => {
             if ($('#id').val() == '') {

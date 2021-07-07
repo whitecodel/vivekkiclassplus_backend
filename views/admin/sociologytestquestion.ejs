@@ -93,9 +93,14 @@
     <%- include ('partials/footer.ejs') %>
 
     <script>
-      activeSideBar("sociology-test-questions");
-      $("#home_expand1").text("expand_more");
-      $("#home_submenu1").show();
+      activeSideBar("sociology-li");
+      activeSideBar("sociology-test-categories");
+      var sociology = $("#sociology").find("#home_expand");
+      var submenu = $("#sociology").find(".submenu");
+      sociology.text("expand_less");
+      submenu.show();
+      $("#home_expand").text("expand_more");
+      $("#home_submenu").show();
 
       $(document).ready(function () {
         $("#example").DataTable();

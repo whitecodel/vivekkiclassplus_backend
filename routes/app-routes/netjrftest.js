@@ -9,7 +9,7 @@ router.post("/", [NotLoggedIn, NoActivePlan], async (req, res) => {
   var error = false;
   var msg;
   try {
-    if (!req.activePlan.notes) {
+    if (!req.activePlan.tests) {
       return res.send({
         error: true,
         msg: "No active plan to access this content",
@@ -36,7 +36,7 @@ router.post("/getnetjrftest", [NotLoggedIn, NoActivePlan], async (req, res) => {
   var error = false;
   var msg;
   try {
-    if (!req.activePlan.notes) {
+    if (!req.activePlan.tests) {
       return res.send({
         error: true,
         msg: "No active plan to access this content",

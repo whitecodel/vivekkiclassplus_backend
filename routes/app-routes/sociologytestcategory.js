@@ -5,7 +5,7 @@ const { NoActivePlan } = require("../../middlewares/Plan");
 
 router.get("/", [NotLoggedIn, NoActivePlan], async (req, res) => {
   try {
-    if (!req.activePlan.sociology_videos) {
+    if (!req.activePlan.sociology_tests) {
       return res.send({
         error: true,
         msg: "No active plan to access this content",

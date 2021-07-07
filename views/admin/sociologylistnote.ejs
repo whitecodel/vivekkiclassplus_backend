@@ -40,9 +40,14 @@
 <%- include ('partials/footer.ejs') %>
 
 <script>
-    activeSideBar('sociology-note-categories');
-    $("#home_expand1").text('expand_more');
-    $('#home_submenu1').show();
+    activeSideBar("sociology-li");
+    activeSideBar("sociology-note-categories");
+    var sociology = $("#sociology").find("#home_expand");
+    var submenu = $("#sociology").find(".submenu");
+    sociology.text("expand_less");
+    submenu.show();
+    $("#home_expand").text("expand_more");
+    $("#home_submenu").show();
 
     function deletenote(id) {
         if (confirm('Do you really want to delete this note')) {

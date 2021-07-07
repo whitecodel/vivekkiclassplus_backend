@@ -27,7 +27,7 @@ const upload = multer({
 
 module.exports = {
   addnetjrfTest: async (req, res) => {
-    if (!req.body.name) return res.send("netjrf Test Name is Required");
+    if (!req.body.name) return res.send("Netjrf Test Name is Required");
     if (!req.body.duration) return res.send("Duration is Required");
     if (!req.body.category) return res.send("Category ID is Required");
     // if (!req.body.questions) return res.send("Question's is Required");

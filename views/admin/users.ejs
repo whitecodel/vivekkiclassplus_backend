@@ -84,52 +84,51 @@
           <td class="text-center"><%= plan.months %></td>
           <td class="text-center"><%= plan.amount %></td>
           <td class="text-center">
-            <% if(plan.videos) { `<i
-              class="material-icons bg-success text-white"
+            <%- plan.videos ? `<i class="material-icons bg-success text-white"
               >done</i
-            >` } else { `<i class="material-icons bg-danger text-white">close</i
-            >` }%>
+            >` : `<i class="material-icons bg-danger text-white">close</i>`%>
           </td>
           <td class="text-center">
-            <% plan.notes ? `<i class="material-icons bg-success text-white"
+            <%- plan.notes ? `<i class="material-icons bg-success text-white"
               >done</i
             >` : `<i class="material-icons bg-danger text-white">close</i>` %>
           </td>
           <td class="text-center">
-            <% plan.tests ? `<i class="material-icons bg-success text-white"
+            <%- plan.tests ? `<i class="material-icons bg-success text-white"
               >done</i
             >` : `<i class="material-icons bg-danger text-white">close</i>` %>
           </td>
           <td class="text-center">
-            <% plan.sociology_videos ? `<i
-              class="material-icons bg-success text-white"
-              >done</i
-            >` : `<i class="material-icons bg-danger text-white">close</i>` %>
-          </td>
-          <td class="text-center">
-            <% plan.sociology_notes ? `<i
+            <%- plan.sociology_videos ? `<i
               class="material-icons bg-success text-white"
               >done</i
             >` : `<i class="material-icons bg-danger text-white">close</i>` %>
           </td>
           <td class="text-center">
-            <% plan.sociology_tests ? `<i
+            <%- plan.sociology_notes ? `<i
               class="material-icons bg-success text-white"
               >done</i
             >` : `<i class="material-icons bg-danger text-white">close</i>` %>
           </td>
           <td class="text-center">
-            <% plan.pp_videos ? `<i class="material-icons bg-success text-white"
+            <%- plan.sociology_tests ? `<i
+              class="material-icons bg-success text-white"
               >done</i
             >` : `<i class="material-icons bg-danger text-white">close</i>` %>
           </td>
           <td class="text-center">
-            <% plan.pp_notes ? `<i class="material-icons bg-success text-white"
+            <%- plan.pp_videos ? `<i
+              class="material-icons bg-success text-white"
               >done</i
             >` : `<i class="material-icons bg-danger text-white">close</i>` %>
           </td>
           <td class="text-center">
-            <% plan.pp_tests ? `<i class="material-icons bg-success text-white"
+            <%- plan.pp_notes ? `<i class="material-icons bg-success text-white"
+              >done</i
+            >` : `<i class="material-icons bg-danger text-white">close</i>` %>
+          </td>
+          <td class="text-center">
+            <%- plan.pp_tests ? `<i class="material-icons bg-success text-white"
               >done</i
             >` : `<i class="material-icons bg-danger text-white">close</i>` %>
           </td>
@@ -141,7 +140,7 @@
               class="material-icons table-icon btn text-primary"
               data-toggle="modal"
               data-target="#editUser"
-              onclick="editformupdate('<%= plan.user %>', '<%= plan.name %>', '<%= plan.phone %>', '<%= plan.months %>', '<%= plan.amount %>', '<%= plan.videos %>', '<%= plan.notes %>', '<%= plan.sociology_videos %>', '<%= plan.sociology_notes %>');"
+              onclick="editformupdate('<%= plan.user %>', '<%= plan.name %>', '<%= plan.phone %>', '<%= plan.months %>', '<%= plan.amount %>', '<%= plan.videos %>', '<%= plan.notes %>', '<%= plan.tests %>', '<%= plan.sociology_videos %>', '<%= plan.sociology_notes %>', '<%= plan.sociology_tests %>', '<%= plan.pp_videos %>', '<%= plan.pp_notes %>', '<%= plan.pp_tests %>');"
               >edit</i
             >
           </td>
@@ -609,8 +608,13 @@
           amount: $("#amount").val(),
           videos: $("#videos").is(":checked"),
           notes: $("#notes").is(":checked"),
+          tests: $("#tests").is(":checked"),
           sociology_videos: $("#sociology_videos").is(":checked"),
           sociology_notes: $("#sociology_notes").is(":checked"),
+          sociology_tests: $("#sociology_tests").is(":checked"),
+          pp_videos: $("#pp_videos").is(":checked"),
+          pp_notes: $("#pp_notes").is(":checked"),
+          pp_tests: $("#pp_tests").is(":checked"),
         };
 
         // DO POST
@@ -674,8 +678,13 @@
             amount: $("#editamount").val(),
             videos: $("#editvideos").is(":checked"),
             notes: $("#editnotes").is(":checked"),
+            tests: $("#edittests").is(":checked"),
             sociology_videos: $("#editsociologyvideos").is(":checked"),
             sociology_notes: $("#editsociologynotes").is(":checked"),
+            sociology_tests: $("#editsociologytests").is(":checked"),
+            pp_videos: $("#editppvideos").is(":checked"),
+            pp_notes: $("#editppnotes").is(":checked"),
+            pp_tests: $("#editpptests").is(":checked"),
             plan: $("#plan").is(":checked"),
           }),
         }).done((res) => {
@@ -695,8 +704,13 @@
         amount,
         videos,
         notes,
+        tests,
         sociology_videos,
-        sociology_notes
+        sociology_notes,
+        sociology_tests,
+        pp_videos,
+        pp_notes,
+        pp_tests
       ) {
         $("#editid").val(id);
         $("#editname").val(name);
@@ -709,12 +723,27 @@
         notes == "true"
           ? $("#editnotes").attr("checked", true)
           : $("#editnotes").attr("checked", false);
+        tests == "true"
+          ? $("#edittests").attr("checked", true)
+          : $("#edittests").attr("checked", false);
         sociology_videos == "true"
           ? $("#editsociologyvideos").attr("checked", true)
           : $("#editsociologyvideos").attr("checked", false);
         sociology_notes == "true"
           ? $("#editsociologynotes").attr("checked", true)
           : $("#editsociologynotes").attr("checked", false);
+        sociology_tests == "true"
+          ? $("#editsociologytests").attr("checked", true)
+          : $("#editsociologytests").attr("checked", false);
+        pp_videos == "true"
+          ? $("#editppvideos").attr("checked", true)
+          : $("#editppvideos").attr("checked", false);
+        pp_notes == "true"
+          ? $("#editppnotes").attr("checked", true)
+          : $("#editppnotes").attr("checked", false);
+        pp_tests == "true"
+          ? $("#editpptests").attr("checked", true)
+          : $("#editpptests").attr("checked", false);
       }
 
       function deleteuser(id) {

@@ -93,9 +93,14 @@
     <%- include ('partials/footer.ejs') %>
 
     <script>
-      activeSideBar("netjrf-test-questions");
-      $("#home_expand1").text("expand_more");
-      $("#home_submenu1").show();
+      activeSideBar("netjrf-li");
+      activeSideBar("netjrf-test-categories");
+      var netjrf = $("#netjrf").find("#home_expand");
+      var submenu = $("#netjrf").find(".submenu");
+      netjrf.text("expand_less");
+      submenu.show();
+      $("#home_expand").text("expand_more");
+      $("#home_submenu").show();
 
       $(document).ready(function () {
         $("#example").DataTable();

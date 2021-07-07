@@ -9,7 +9,7 @@ router.post("/", [NotLoggedIn, NoActivePlan], async (req, res) => {
   var error = false;
   var msg;
   try {
-    if (!req.activePlan.notes) {
+    if (!req.activePlan.sociology_tests) {
       return res.send({
         error: true,
         msg: "No active plan to access this content",
@@ -39,7 +39,7 @@ router.post(
     var error = false;
     var msg;
     try {
-      if (!req.activePlan.notes) {
+      if (!req.activePlan.sociology_tests) {
         return res.send({
           error: true,
           msg: "No active plan to access this content",
