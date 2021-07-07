@@ -32,12 +32,15 @@ const activeplanR = require("./routes/app-routes/activeplan");
 const sliderR = require("./routes/app-routes/slider");
 const qstudentsR = require("./routes/app-routes/qstudent");
 const appcurrentaffairR = require("./routes/app-routes/currentaffair");
-const sociologytestcategoryR = require("./routes/app-routes/sociologytestcategory");
-const sociologytestsubcategoryR = require("./routes/app-routes/sociologytestsubcategory");
-const sociologytestR = require("./routes/app-routes/sociologytest");
 const netjrftestcategoryR = require("./routes/app-routes/netjrftestcategory");
 const netjrftestsubcategoryR = require("./routes/app-routes/netjrftestsubcategory");
 const netjrftestR = require("./routes/app-routes/netjrftest");
+const sociologytestcategoryR = require("./routes/app-routes/sociologytestcategory");
+const sociologytestsubcategoryR = require("./routes/app-routes/sociologytestsubcategory");
+const sociologytestR = require("./routes/app-routes/sociologytest");
+const pptestcategoryR = require("./routes/app-routes/pptestcategory");
+const pptestsubcategoryR = require("./routes/app-routes/pptestsubcategory");
+const pptestR = require("./routes/app-routes/pptest");
 
 // Admin routes
 const authR = require("./routes/backend-routes/auth");
@@ -111,12 +114,15 @@ const AppRoutes = (app) => {
   app.use("/qstudents", qstudentsR);
   app.use("/currentaffair", appcurrentaffairR);
   // app test routes
-  app.use("/sociologytestcategory", sociologytestcategoryR);
-  app.use("/sociologytestsubcategory", sociologytestsubcategoryR);
-  app.use("/sociologytests", sociologytestR);
   app.use("/netjrftestcategory", netjrftestcategoryR);
   app.use("/netjrftestsubcategory", netjrftestsubcategoryR);
   app.use("/netjrftests", netjrftestR);
+  app.use("/sociologytestcategory", sociologytestcategoryR);
+  app.use("/sociologytestsubcategory", sociologytestsubcategoryR);
+  app.use("/sociologytests", sociologytestR);
+  app.use("/pptestcategory", pptestcategoryR);
+  app.use("/pptestsubcategory", pptestsubcategoryR);
+  app.use("/pptests", pptestR);
 
   // admin routes
   app.use("/", testR);
