@@ -21,8 +21,8 @@ if (!result) {
 }
 
 const limiter = rateLimit({
-  windowMs: 1000, // 15 minutes
-  max: 10000000000, // limit each IP to 100 requests per windowMs
+  windowMs: 1000, // 1 seconds
+  max: 1000, // limit each IP to 100 requests per windowMs
 });
 
 //express and env config
